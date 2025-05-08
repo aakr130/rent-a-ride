@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { FaClock, FaShieldAlt, FaBolt } from "react-icons/fa";
 
 export default function AboutUsPage() {
   return (
@@ -23,9 +22,6 @@ export default function AboutUsPage() {
         </blockquote>
       </section>
 
-      {/* Why Choose Us Section */}
-
-      {/* Video Section */}
       <section className="mb-20 text-center">
         <h2 className="mb-4 text-3xl font-bold text-gray-800 drop-shadow-sm">
           Experience the Ride
@@ -45,7 +41,6 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* Vehicle Image Grid */}
       <section className="grid grid-cols-1 gap-10 mb-20 md:grid-cols-3">
         {[
           {
