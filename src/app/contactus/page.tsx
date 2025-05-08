@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen px-6 py-20 text-gray-800 bg-gradient-to-b from-white via-slate-50 to-white sm:px-12 lg:px-24">
+    <main className="min-h-screen px-6 py-20 text-gray-800 bg-gradient-to-b from-white via-slate-300 to-white sm:px-12 lg:px-24">
       <section className="mb-16 text-center">
         <h1 className="mb-4 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 drop-shadow-lg">
           Let’s Talk
