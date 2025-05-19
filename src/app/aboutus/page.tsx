@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function AboutUsPage() {
   return (
-    <main className="min-h-screen px-6 py-10 text-gray-900 bg-gradient-to-b from-white via-slate-300 to-white sm:px-12 lg:px-24">
+    <main className="relative z-0 min-h-screen px-6 py-10 pt-20 text-gray-900 bg-gradient-to-b from-white via-slate-300 to-white sm:px-12 lg:px-24">
       <section className="mb-16 text-center">
         <h1 className="mb-4 text-4xl font-extrabold text-transparent underline sm:text-5xl bg-clip-text bg-gradient-to-r from-blue-600 via-red-500 to-yellow-500 drop-shadow-md">
           About Rent-a-ride

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { Brand, Car } from "../../../types";
 import BrandFilter from "../../../components/BrandFilter";
-import CarCard from "../../../components/CarCard";
+import CarCard from "../../../components/VehicleCard";
 import BottomNavigation from "../../../components/BottomNavigation";
 
 export default function SearchPage() {

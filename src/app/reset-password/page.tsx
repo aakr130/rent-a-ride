@@ -16,7 +16,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white flex flex-col">
+    <main className="flex flex-col min-h-screen bg-white">
       <div className="p-6 pt-10">
         <div className="flex items-center gap-2">
           <Image
@@ -25,14 +25,14 @@ export default function ResetPasswordPage() {
             width={32}
             height={32}
           />
-          <span className="font-bold text-xl">Qent</span>
+          <span className="text-xl font-bold">Qent</span>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col p-6">
-        <div className="max-w-md mx-auto w-full">
-          <h1 className="text-2xl font-bold mb-2">Reset your password</h1>
-          <p className="text-gray-600 mb-8">
+      <div className="flex flex-col flex-1 p-6">
+        <div className="w-full max-w-md mx-auto">
+          <h1 className="mb-2 text-2xl font-bold">Reset your password</h1>
+          <p className="mb-8 text-gray-600">
             Enter the email address associated with your account and well send
             you a link to reset your password.
           </p>
@@ -54,16 +54,16 @@ export default function ResetPasswordPage() {
             </button>
           </form>
 
-          <div className="text-center mt-6">
-            <Link href="/login" className="text-gray-600 text-sm">
+          <div className="mt-6 text-center">
+            <Link href="/login" className="text-sm text-gray-600">
               Return to sign in
             </Link>
           </div>
 
           <div className="mt-12 text-center">
-            <p className="text-gray-600 text-sm">
+            <p className="text-sm text-gray-600">
               Create a{" "}
-              <Link href="/signup" className="text-black font-medium">
+              <Link href="/signup" className="font-medium text-black">
                 New account
               </Link>
             </p>
