@@ -1,35 +1,62 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
+
+const loginSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [formData, setFormData] = useState({ email: "", password: "" });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Login form submitted:", formData);
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        toast.success("Login successful");
+        localStorage.setItem("user", JSON.stringify(result.user));
+        window.location.href = "/dashboard";
+      } else {
+        toast.error(result.message || "Invalid credentials");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Login failed");
+    }
   };
 
   return (
     <main className="flex items-center justify-center min-h-screen px-4 py-10 bg-gradient-to-b from-white via-slate-300 to-white">
+      <Toaster position="top-right" />
       <div className="w-full max-w-md p-8 bg-white border border-gray-100 shadow-2xl rounded-2xl">
         <div className="flex items-center justify-center gap-2">
-          <Image
-            src="/images/logo.png"
-            alt="Qent Logo"
-            width={82}
-            height={82}
-          />
+          <Image src="/images/logo.png" alt=" Logo" width={82} height={82} />
         </div>
 
         <div className="text-center">
@@ -39,24 +66,18 @@ export default function LoginPage() {
           <p className="mt-1 text-sm text-gray-600">Ready to hit the road?</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-2 space-y-5">
-          <input
-            type="text"
-            name="email"
-            placeholder="Email or Phone Number"
-            className="w-full px-4 py-3 text-sm text-black border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"
-            value={formData.email}
-            onChange={handleChange}
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-2 space-y-5">
+          <input {...register("email")} placeholder="Email" className="input" />
+          {errors.email && (
+            <p className="text-sm text-red-500">{errors.email.message}</p>
+          )}
 
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              name="password"
+              {...register("password")}
               placeholder="Password"
-              className="w-full px-4 py-3 pr-10 text-sm text-black border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"
-              value={formData.password}
-              onChange={handleChange}
+              className="pr-10 input"
             />
             <button
               type="button"
@@ -66,6 +87,9 @@ export default function LoginPage() {
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
+          {errors.password && (
+            <p className="text-sm text-red-500">{errors.password.message}</p>
+          )}
 
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 text-black">
@@ -88,7 +112,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full py-3 font-semibold text-white transition-transform duration-200 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105"
+            className="w-full py-3 font-semibold text-white transition-transform duration-200 rounded-lg shadow-md cursor-pointer bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105"
           >
             Login
           </button>

@@ -5,11 +5,18 @@ import Link from "next/link";
 import { Bell } from "lucide-react";
 import { usePathname } from "next/navigation";
 import "./topbar.css";
+import { useEffect, useState } from "react";
 
 export default function Topbar() {
-  const pathname = usePathname();
-
-  const isLoggedIn = pathname.startsWith("/dashboard");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        setIsLoggedIn(data.authenticated);
+      })
+      .catch(() => setIsLoggedIn(false));
+  }, []);
 
   return (
     <nav
@@ -17,7 +24,6 @@ export default function Topbar() {
       bg-white/80 backdrop-blur-md border-white/30"
     >
       <div className="flex items-center justify-between max-w-screen-xl mx-auto">
-        {/* Logo */}
         <Link href="/" className="flex items-center space-x-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-full shadow-md bg-white/90">
             <Image
@@ -33,7 +39,6 @@ export default function Topbar() {
           </span>
         </Link>
 
-        {/* Navigation / User Panel */}
         <div className="flex items-center space-x-6 text-sm font-medium">
           {!isLoggedIn ? (
             <>

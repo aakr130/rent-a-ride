@@ -1,9 +1,14 @@
-"use client";
+import jwt from "jsonwebtoken";
 
 import Image from "next/image";
 import Link from "next/link";
+import { cookies } from "next/headers";
+
+import { redirect } from "next/navigation";
+import { requireAuth } from "@/lib/auth";
 
 export default function DashboardMain() {
+  requireAuth();
   return (
     <main className="flex flex-col items-center min-h-screen px-6 py-10 text-gray-900 pt-28 bg-gradient-to-b from-white via-slate-100 to-white">
       <div className="w-full max-w-6xl mb-10 text-center">
