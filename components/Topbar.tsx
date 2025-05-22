@@ -18,6 +18,19 @@ export default function Topbar() {
       .catch(() => setIsLoggedIn(false));
   }, []);
 
+  const logout = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", { method: "POST" });
+      if (res.ok) {
+        setIsLoggedIn(false);
+        localStorage.removeItem("user");
+        window.location.href = "/";
+      }
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
   return (
     <nav
       className="fixed top-0 left-0 z-50 w-full px-8 py-4 border-b shadow-[0_4px_30px_rgba(0,0,0,0.05)]
@@ -76,6 +89,12 @@ export default function Topbar() {
                   className="rounded-full"
                 />
               </Link>
+              <button
+                onClick={logout}
+                className="px-4 py-1.5 text-sm font-medium text-white transition bg-red-500 rounded-full hover:bg-red-600"
+              >
+                Logout
+              </button>
             </>
           )}
         </div>
