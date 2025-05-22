@@ -2,6 +2,7 @@ import { db } from "@/app/lib/db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import { serialize } from "cookie";
+import cors from "@/lib/cors";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
@@ -9,7 +10,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") return res.status(405).end();
+  await cors(req, res);
+  if (req.method !== "POST")
+    return res.status(405).json({ message: "Method Not Allowed" });
 
   const { email, password } = req.body as { email: string; password: string };
 

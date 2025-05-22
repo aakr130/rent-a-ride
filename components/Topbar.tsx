@@ -15,9 +15,7 @@ export default function Topbar() {
   useEffect(() => {
     const fetchAuth = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/me`
-        );
+        const res = await fetch("/api/auth/me");
         const data = await res.json();
         setIsLoggedIn(data.authenticated);
       } catch {
@@ -30,7 +28,7 @@ export default function Topbar() {
   const isProtectedRoute =
     pathname?.startsWith("/dashboard") || pathname?.startsWith("/profile");
   const handleLogout = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/logout`, {
+    await fetch("/api/auth/logout", {
       method: "POST",
     });
 

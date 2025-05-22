@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/app/lib/db";
+import cors from "@/lib/cors";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await cors(req, res);
   console.log("✅ SIGNUP ROUTE HIT");
 
   if (req.method !== "POST") {
