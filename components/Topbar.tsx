@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Bell, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import "./topbar.css";
+import "./topbar.css"; // Keeps your custom animation styles
 
 export default function Topbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,8 +30,11 @@ export default function Topbar() {
   return (
     <nav className="fixed top-0 left-0 z-50 w-full border-b shadow bg-white/80 backdrop-blur-md border-white/30">
       <div className="flex items-center justify-between max-w-screen-xl px-4 py-3 mx-auto md:px-8">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
+        {/* Logo Section */}
+        <Link
+          href="/"
+          className="flex items-center space-x-2 whitespace-nowrap"
+        >
           <div className="flex items-center justify-center w-10 h-10 rounded-full shadow-md bg-white/90">
             <Image
               src="/images/logo.png"
@@ -46,7 +49,7 @@ export default function Topbar() {
           </span>
         </Link>
 
-        {/* Mobile toggle */}
+        {/* Mobile menu icon */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="text-gray-800 md:hidden"
@@ -54,7 +57,7 @@ export default function Topbar() {
           {mobileOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
 
-        {/* Navigation */}
+        {/* Navigation Links */}
         <div
           className={`${
             mobileOpen ? "block" : "hidden"
@@ -64,14 +67,17 @@ export default function Topbar() {
             <>
               <Link
                 href="/notifications"
-                className="relative block py-2 md:py-0"
+                className="relative inline-block py-2 text-black transition duration-300 hover:text-red-400 group animated-underline md:py-0"
               >
                 <Bell size={22} />
-                <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full">
+                <span className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -right-1">
                   2
                 </span>
               </Link>
-              <Link href="/profile">
+              <Link
+                href="/profile"
+                className="inline-block transition hover:opacity-80"
+              >
                 <Image
                   src="https://github.com/R3yz0n.png"
                   alt="User"
@@ -93,7 +99,7 @@ export default function Topbar() {
                 <Link
                   key={i}
                   href={`/${path}`}
-                  className="block py-2 text-black transition md:inline-block hover:text-red-500"
+                  className="relative inline-block py-2 text-black transition duration-300 hover:text-red-400 group animated-underline md:py-0"
                 >
                   {path.charAt(0).toUpperCase() +
                     path.slice(1).replace("us", " Us")}
