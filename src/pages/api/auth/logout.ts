@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { serialize } from "cookie";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).end();
@@ -11,9 +11,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      expires: new Date(0),
+      maxAge: 0,
     })
   );
 
-  res.status(200).json({ message: "Logged out" });
+  return res.status(200).json({ message: "Logged out" });
 }

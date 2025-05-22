@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 
 export default function Topbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const pathname = usePathname();
+
   useEffect(() => {
     fetch("/api/auth/me")
       .then((res) => res.json())
@@ -18,24 +20,16 @@ export default function Topbar() {
       .catch(() => setIsLoggedIn(false));
   }, []);
 
-  const logout = async () => {
-    try {
-      const res = await fetch("/api/auth/logout", { method: "POST" });
-      if (res.ok) {
-        setIsLoggedIn(false);
-        localStorage.removeItem("user");
-        window.location.href = "/";
-      }
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
+  const isProtectedRoute =
+    pathname?.startsWith("/dashboard") || pathname?.startsWith("/profile");
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/login";
   };
 
   return (
-    <nav
-      className="fixed top-0 left-0 z-50 w-full px-8 py-4 border-b shadow-[0_4px_30px_rgba(0,0,0,0.05)]
-      bg-white/80 backdrop-blur-md border-white/30"
-    >
+    <nav className="fixed top-0 left-0 z-50 w-full px-8 py-4 border-b shadow-[0_4px_30px_rgba(0,0,0,0.05)] bg-white/80 backdrop-blur-md border-white/30">
       <div className="flex items-center justify-between max-w-screen-xl mx-auto">
         <Link href="/" className="flex items-center space-x-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-full shadow-md bg-white/90">
@@ -53,26 +47,7 @@ export default function Topbar() {
         </Link>
 
         <div className="flex items-center space-x-6 text-sm font-medium">
-          {!isLoggedIn ? (
-            <>
-              {["aboutus", "contactus", "login"].map((path, i) => (
-                <Link
-                  key={i}
-                  href={`/${path}`}
-                  className="relative inline-block text-black transition duration-300 hover:text-red-400 group animated-underline"
-                >
-                  {path.charAt(0).toUpperCase() +
-                    path.slice(1).replace("us", " Us")}
-                </Link>
-              ))}
-              <Link
-                href="/signup"
-                className="px-5 py-2 font-semibold text-black transition duration-300 rounded-full shadow-lg bg-gradient-to-r from-yellow-300 to-yellow-500 hover:from-yellow-400 hover:to-yellow-600 hover:text-white"
-              >
-                Sign Up
-              </Link>
-            </>
-          ) : (
+          {isLoggedIn && isProtectedRoute ? (
             <>
               <Link href="/notifications" className="relative">
                 <Bell size={22} />
@@ -90,11 +65,30 @@ export default function Topbar() {
                 />
               </Link>
               <button
-                onClick={logout}
-                className="px-4 py-1.5 text-sm font-medium text-white transition bg-red-500 rounded-full hover:bg-red-600"
+                onClick={handleLogout}
+                className="px-4 py-1 font-semibold text-white bg-red-500 rounded-full hover:bg-red-600"
               >
                 Logout
               </button>
+            </>
+          ) : (
+            <>
+              {["aboutus", "contactus", "login"].map((path, i) => (
+                <Link
+                  key={i}
+                  href={`/${path}`}
+                  className="relative inline-block text-black transition duration-300 hover:text-red-400 group animated-underline"
+                >
+                  {path.charAt(0).toUpperCase() +
+                    path.slice(1).replace("us", " Us")}
+                </Link>
+              ))}
+              <Link
+                href="/signup"
+                className="px-5 py-2 font-semibold text-black transition duration-300 rounded-full shadow-lg bg-gradient-to-r from-yellow-300 to-yellow-500 hover:from-yellow-400 hover:to-yellow-600 hover:text-white"
+              >
+                Sign Up
+              </Link>
             </>
           )}
         </div>
