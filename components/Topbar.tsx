@@ -30,6 +30,7 @@ export default function Topbar() {
   return (
     <nav className="fixed top-0 left-0 z-50 w-full border-b shadow bg-white/80 backdrop-blur-md border-white/30">
       <div className="flex items-center justify-between max-w-screen-xl px-4 py-3 mx-auto md:px-8">
+        {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <div className="flex items-center justify-center w-10 h-10 rounded-full shadow-md bg-white/90">
             <Image
@@ -45,6 +46,7 @@ export default function Topbar() {
           </span>
         </Link>
 
+        {/* Mobile toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="text-gray-800 md:hidden"
@@ -52,10 +54,11 @@ export default function Topbar() {
           {mobileOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
 
+        {/* Navigation */}
         <div
           className={`${
             mobileOpen ? "block" : "hidden"
-          } absolute top-16 left-0 w-full px-4 pb-4 bg-white shadow-md md:shadow-none md:static md:bg-transparent md:flex md:items-center md:space-x-6 md:pb-0 md:px-0`}
+          } absolute top-16 left-0 w-full px-4 pb-4 bg-white shadow-md md:shadow-none md:static md:bg-transparent md:flex md:items-center md:justify-end md:space-x-6 md:pb-0 md:px-0`}
         >
           {isLoggedIn && isProtectedRoute ? (
             <>
