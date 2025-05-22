@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Bell, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import "./topbar.css"; // Keeps your custom animation styles
+import "./topbar.css";
 
 export default function Topbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,17 +13,27 @@ export default function Topbar() {
   const pathname = usePathname();
 
   useEffect(() => {
-    fetch("/api/auth/me")
-      .then((res) => res.json())
-      .then((data) => setIsLoggedIn(data.authenticated))
-      .catch(() => setIsLoggedIn(false));
+    const fetchAuth = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/me`
+        );
+        const data = await res.json();
+        setIsLoggedIn(data.authenticated);
+      } catch {
+        setIsLoggedIn(false);
+      }
+    };
+    fetchAuth();
   }, []);
 
   const isProtectedRoute =
     pathname?.startsWith("/dashboard") || pathname?.startsWith("/profile");
-
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/logout`, {
+      method: "POST",
+    });
+
     window.location.href = "/login";
   };
 
