@@ -1,11 +1,5 @@
-import mysql from "mysql2/promise";
+import { Pool } from "pg";
 
-export const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "Qwerty123$",
-  database: "rent_a_ride",
+export const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
 });
-db.getConnection()
-  .then(() => console.log("✅ MySQL connected"))
-  .catch((err) => console.error("❌ MySQL connect error", err));

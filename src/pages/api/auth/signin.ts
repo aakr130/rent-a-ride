@@ -11,31 +11,24 @@ export default async function handler(
 ) {
   if (req.method !== "POST") return res.status(405).end();
 
-  const { email, password } = req.body as {
-    email: string;
-    password: string;
-  };
+  const { email, password } = req.body as { email: string; password: string };
 
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password required." });
   }
 
   try {
-    const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [
+    const result = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
-    const user = (rows as any[])[0];
+    const user = result.rows[0];
 
     if (!user || user.password !== password) {
       return res.status(401).json({ message: "Invalid email or password." });
     }
 
     const accessToken = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-      },
+      { id: user.id, email: user.email, name: user.name },
       JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -56,7 +49,7 @@ export default async function handler(
       user: { id: user.id, name: user.name, email: user.email },
     });
   } catch (err) {
-    console.error(err);
+    console.error("❌ LOGIN ERROR:", err);
     return res.status(500).json({ message: "Server error." });
   }
 }
