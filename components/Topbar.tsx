@@ -6,6 +6,14 @@ import { Bell, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import "./topbar.css";
+import { User, LogOut } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Topbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,18 +35,17 @@ export default function Topbar() {
 
   const isProtectedRoute =
     pathname?.startsWith("/dashboard") || pathname?.startsWith("/profile");
+
   const handleLogout = async () => {
     await fetch("/api/auth/logout", {
       method: "POST",
     });
-
     window.location.href = "/login";
   };
 
   return (
     <nav className="fixed top-0 left-0 z-50 w-full border-b shadow bg-white/80 backdrop-blur-md border-white/30">
       <div className="flex items-center justify-between max-w-screen-xl px-4 py-3 mx-auto md:px-8">
-        {/* Logo Section */}
         <Link
           href="/"
           className="flex items-center space-x-2 whitespace-nowrap"
@@ -57,7 +64,6 @@ export default function Topbar() {
           </span>
         </Link>
 
-        {/* Mobile menu icon */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="text-gray-800 md:hidden"
@@ -65,7 +71,6 @@ export default function Topbar() {
           {mobileOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
 
-        {/* Navigation Links */}
         <div
           className={`${
             mobileOpen ? "block" : "hidden"
@@ -82,24 +87,40 @@ export default function Topbar() {
                   2
                 </span>
               </Link>
-              <Link
-                href="/profile"
-                className="inline-block transition hover:opacity-80"
-              >
-                <Image
-                  src="https://github.com/R3yz0n.png"
-                  alt="User"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 mt-2 text-white bg-red-500 rounded-full md:mt-0 hover:bg-red-600"
-              >
-                Logout
-              </button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Image
+                    src="https://github.com/R3yz0n.png"
+                    alt="User"
+                    width={32}
+                    height={32}
+                    className="transition duration-200 rounded-full cursor-pointer ring-2 ring-gray-300 hover:ring-yellow-400"
+                  />
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent
+                  side="bottom"
+                  align="end"
+                  className="w-48 mt-2 bg-white border shadow-xl rounded-xl animate-in fade-in slide-in-from-top-1"
+                >
+                  <DropdownMenuItem
+                    onClick={() => (window.location.href = "/edit-profile")}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-yellow-100"
+                  >
+                    <User size={16} />
+                    Edit Profile
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 cursor-pointer hover:bg-red-100"
+                  >
+                    <LogOut size={16} />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           ) : (
             <>
