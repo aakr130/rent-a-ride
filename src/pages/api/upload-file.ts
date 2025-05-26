@@ -1,56 +1,75 @@
 import { put } from "@vercel/blob";
-import formidable, { IncomingForm, File as FormidableFile } from "formidable";
+import { IncomingForm, Files, Fields } from "formidable";
 import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
+import path from "path";
 
-// Disable Next.js body parsing
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
+// Helper to parse multipart/form-data
+function parseForm(
+  req: NextApiRequest
+): Promise<{ fields: Fields; files: Files }> {
+  const form = new IncomingForm({
+    keepExtensions: true,
+    maxFileSize: 10 * 1024 * 1024, // 10 MB
+  });
+
+  return new Promise((resolve, reject) => {
+    form.parse(req, (err, fields, files) => {
+      if (err) reject(err);
+      else resolve({ fields, files });
+    });
+  });
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST")
+  if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed" });
+  }
 
-  const form = new IncomingForm({ keepExtensions: true });
-
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      console.error("Error parsing file:", err);
-      return res.status(500).json({ error: "File parsing error" });
-    }
-
+  try {
+    const { files } = await parseForm(req);
     const uploaded = files.file;
 
-    // ✅ Handle possible array or undefined
-    const file = Array.isArray(uploaded)
-      ? uploaded[0]
-      : (uploaded as FormidableFile);
-
-    if (!file || !file.filepath) {
-      return res.status(400).json({ error: "No valid file found." });
+    if (!uploaded) {
+      console.log("⚠️ No file received in upload");
+      return res.status(400).json({ error: "No file uploaded." });
     }
+
+    const file = Array.isArray(uploaded) ? uploaded[0] : uploaded;
+
+    if (!file || typeof file !== "object" || !("filepath" in file)) {
+      console.log("❌ Invalid file object:", file);
+      return res.status(400).json({ error: "Invalid file object." });
+    }
+
+    console.log("📤 File received for upload:", {
+      originalFilename: file.originalFilename,
+      mimeType: file.mimetype,
+      size: file.size,
+    });
 
     const stream = fs.createReadStream(file.filepath);
+    const filename = file.originalFilename || path.basename(file.filepath);
 
-    try {
-      const blob = await put(
-        file.originalFilename || file.newFilename,
-        stream,
-        {
-          access: "public",
-        }
-      );
+    const blob = await put(filename, stream, {
+      access: "public",
+      token: process.env.BLOB_READ_WRITE_TOKEN!,
+    });
 
-      return res.status(200).json({ url: blob.url });
-    } catch (uploadError) {
-      console.error("Upload failed:", uploadError);
-      return res.status(500).json({ error: "Upload failed" });
-    }
-  });
+    console.log("✅ Upload successful, Blob URL:", blob.url);
+
+    return res.status(200).json({ url: blob.url });
+  } catch (error: any) {
+    console.error("❌ Upload Error:", error);
+    return res.status(500).json({ error: error.message || "Upload failed" });
+  }
 }

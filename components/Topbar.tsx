@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, Menu, X } from "lucide-react";
+import { Bell, Menu, UserRoundCog, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import "./topbar.css";
@@ -16,18 +16,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function Topbar() {
+  const [user, setUser] = useState<{
+    id: number;
+    name: string;
+    email: string;
+    profile_image_url?: string;
+  } | null>(null);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-
   useEffect(() => {
     const fetchAuth = async () => {
       try {
         const res = await fetch("/api/auth/me");
         const data = await res.json();
-        setIsLoggedIn(data.authenticated);
+        if (data.authenticated) {
+          setIsLoggedIn(true);
+          setUser(data.user);
+        }
       } catch {
         setIsLoggedIn(false);
+        setUser(null);
       }
     };
     fetchAuth();
@@ -76,29 +86,48 @@ export default function Topbar() {
             mobileOpen ? "block" : "hidden"
           } absolute top-16 left-0 w-full px-4 pb-4 bg-white shadow-md md:shadow-none md:static md:bg-transparent md:flex md:items-center md:justify-end md:space-x-6 md:pb-0 md:px-0`}
         >
-          {isLoggedIn && isProtectedRoute ? (
+          {/* Always visible links */}
+          {["aboutus", "contactus"].map((path, i) => (
+            <Link
+              key={i}
+              href={`/${path}`}
+              className="relative inline-block py-2 text-black transition duration-300 hover:text-red-400 group animated-underline md:py-0"
+            >
+              {path.charAt(0).toUpperCase() +
+                path.slice(1).replace("us", " Us")}
+            </Link>
+          ))}
+
+          {/* Conditional: show when NOT logged in */}
+          {!isLoggedIn ? (
             <>
               <Link
-                href="/notifications"
+                href="/login"
                 className="relative inline-block py-2 text-black transition duration-300 hover:text-red-400 group animated-underline md:py-0"
               >
-                <Bell size={22} />
-                <span className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -right-1">
-                  2
-                </span>
+                Login
               </Link>
-
+              <Link
+                href="/signup"
+                className="block px-4 py-2 mt-2 font-semibold text-center text-white transition rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:to-yellow-700 md:mt-0 md:inline-block"
+              >
+                Sign Up
+              </Link>
+            </>
+          ) : (
+            <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Image
-                    src="https://github.com/R3yz0n.png"
-                    alt="User"
+                    src={
+                      user?.profile_image_url || "/images/default-avatar.png"
+                    }
+                    alt="User Avatar"
                     width={32}
                     height={32}
-                    className="transition duration-200 rounded-full cursor-pointer ring-2 ring-gray-300 hover:ring-yellow-400"
+                    className="transition duration-200 rounded-full cursor-pointer ring-2 ring-gray-300 hover:ring-yellow-400 object-cover"
                   />
                 </DropdownMenuTrigger>
-
                 <DropdownMenuContent
                   side="bottom"
                   align="end"
@@ -109,9 +138,16 @@ export default function Topbar() {
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-yellow-100"
                   >
                     <User size={16} />
-                    Edit Profile
+                    {user?.name}
                   </DropdownMenuItem>
 
+                  <DropdownMenuItem
+                    onClick={() => (window.location.href = "/edit-profile")}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-yellow-100"
+                  >
+                    <UserRoundCog size={16} />
+                    Edit Profile
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={handleLogout}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 cursor-pointer hover:bg-red-100"
@@ -121,25 +157,6 @@ export default function Topbar() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </>
-          ) : (
-            <>
-              {["aboutus", "contactus", "login"].map((path, i) => (
-                <Link
-                  key={i}
-                  href={`/${path}`}
-                  className="relative inline-block py-2 text-black transition duration-300 hover:text-red-400 group animated-underline md:py-0"
-                >
-                  {path.charAt(0).toUpperCase() +
-                    path.slice(1).replace("us", " Us")}
-                </Link>
-              ))}
-              <Link
-                href="/signup"
-                className="block px-4 py-2 mt-2 font-semibold text-center text-white transition rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:to-yellow-700 md:mt-0 md:inline-block"
-              >
-                Sign Up
-              </Link>
             </>
           )}
         </div>
