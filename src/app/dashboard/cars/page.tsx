@@ -23,7 +23,6 @@ type Car = {
 
 export default function CarDashboard() {
   const [cars, setCars] = useState<Car[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -58,7 +57,7 @@ export default function CarDashboard() {
         </div>
       </section>
 
-      {/* Top Picks */}
+      {/* 🚘 Top Picks */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xl font-semibold">🚘 Top Rated Cars</h2>
@@ -70,15 +69,19 @@ export default function CarDashboard() {
           Hand-picked for performance and comfort
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {cars
-            .filter((car) => car.tags.includes("top"))
-            .map((car) => (
-              <VehicleCard key={car.id + "-top"} vehicle={car} />
-            ))}
+          {cars.filter((car) => car.tags.includes("top")).length > 0 ? (
+            cars
+              .filter((car) => car.tags.includes("top"))
+              .map((car) => <VehicleCard key={car.id + "-top"} vehicle={car} />)
+          ) : (
+            <p className="text-sm text-red-500 col-span-full">
+              No top-rated cars available.
+            </p>
+          )}
         </div>
       </section>
 
-      {/* Just Added */}
+      {/* 🚀 Just Added */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xl font-semibold">🚀 Just Added</h2>
@@ -93,15 +96,19 @@ export default function CarDashboard() {
           Explore the latest arrivals to our garage
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {cars
-            .filter((car) => car.tags.includes("just-added"))
-            .map((car) => (
-              <VehicleCard key={car.id + "-new"} vehicle={car} />
-            ))}
+          {cars.filter((car) => car.tags.includes("just-added")).length > 0 ? (
+            cars
+              .filter((car) => car.tags.includes("just-added"))
+              .map((car) => <VehicleCard key={car.id + "-new"} vehicle={car} />)
+          ) : (
+            <p className="text-sm text-red-500 col-span-full">
+              No recently added cars available.
+            </p>
+          )}
         </div>
       </section>
 
-      {/* Electric Picks */}
+      {/* 🔋 Electric Picks */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xl font-semibold">🔋 Electric Picks</h2>
@@ -116,11 +123,15 @@ export default function CarDashboard() {
           Zero-emission rides for the future
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {cars
-            .filter((car) => car.tags.includes("electric"))
-            .map((car) => (
-              <VehicleCard key={car.id + "-ev"} vehicle={car} />
-            ))}
+          {cars.filter((car) => car.tags.includes("electric")).length > 0 ? (
+            cars
+              .filter((car) => car.tags.includes("electric"))
+              .map((car) => <VehicleCard key={car.id + "-ev"} vehicle={car} />)
+          ) : (
+            <p className="text-sm text-red-500 col-span-full">
+              No electric cars available.
+            </p>
+          )}
         </div>
       </section>
 

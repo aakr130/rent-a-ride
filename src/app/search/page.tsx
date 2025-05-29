@@ -84,13 +84,13 @@ export default function SearchPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white flex flex-col pb-16">
-      <div className="p-4 flex items-center justify-between">
+    <main className="flex flex-col min-h-screen pb-16 bg-white">
+      <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-4">
           <Link href="/home">
             <ArrowLeft size={24} />
           </Link>
-          <h1 className="font-bold text-xl">Search</h1>
+          <h1 className="text-xl font-bold">Search</h1>
         </div>
 
         <Link href="#">
@@ -98,22 +98,22 @@ export default function SearchPage() {
         </Link>
       </div>
 
-      <div className="px-4 mb-6 flex items-center gap-2">
+      <div className="flex items-center gap-2 px-4 mb-6">
         <div className="relative flex-1">
           <input
             type="text"
             placeholder="Search your dream car...."
-            className="input-field pl-10"
+            className="pl-10 input-field"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2"
             size={20}
           />
         </div>
 
-        <Link href="/filters" className="bg-gray-100 p-3 rounded-lg">
+        <Link href="/filters" className="p-3 bg-gray-100 rounded-lg">
           <SlidersHorizontal size={20} />
         </Link>
       </div>
@@ -128,28 +128,28 @@ export default function SearchPage() {
 
       <div className="px-4 mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-lg">Recommend For You</h2>
+          <h2 className="text-lg font-bold">Recommend For You</h2>
           <Link href="/recommended" className="text-sm text-gray-500">
             View All
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {recommendedCars.map((car) => (
-            <CarCard key={car.id} car={car} search />
+            <CarCard key={car.id} vehicle={car} search />
           ))}
         </div>
       </div>
 
       <div className="px-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-lg">Our Popular Cars</h2>
+          <h2 className="text-lg font-bold">Our Popular Cars</h2>
           <Link href="/popular" className="text-sm text-gray-500">
             View All
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {popularCars.map((car) => (
-            <CarCard key={car.id} car={car} search />
+            <CarCard key={car.id} vehicle={car} search />
           ))}
         </div>
       </div>

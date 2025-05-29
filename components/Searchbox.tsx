@@ -7,7 +7,7 @@ const Searchbox = () => {
     <div className="relative">
       <input
         type="text"
-        placeholder="Search your scooter..."
+        placeholder="Search your vechile..."
         className="w-full px-10 py-3 text-sm bg-white border rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
