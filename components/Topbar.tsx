@@ -14,34 +14,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useUser } from "@/app/hooks/useUser";
+import Spinner from "@/app/icons/spinner";
 
 export default function Topbar() {
-  const [user, setUser] = useState<{
-    id: number;
-    name: string;
-    email: string;
-    profile_image_url?: string;
-  } | null>(null);
+  const { data, isLoading } = useUser();
+  const user = data?.user;
+  const isLoggedIn = data?.authenticated;
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-  useEffect(() => {
-    const fetchAuth = async () => {
-      try {
-        const res = await fetch("/api/auth/me");
-        const data = await res.json();
-        if (data.authenticated) {
-          setIsLoggedIn(true);
-          setUser(data.user);
-        }
-      } catch {
-        setIsLoggedIn(false);
-        setUser(null);
-      }
-    };
-    fetchAuth();
-  }, []);
 
   const isProtectedRoute =
     pathname?.startsWith("/dashboard") || pathname?.startsWith("/profile");
@@ -118,15 +100,21 @@ export default function Topbar() {
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Image
-                    src={
-                      user?.profile_image_url || "/images/default-avatar.png"
-                    }
-                    alt="User Avatar"
-                    width={32}
-                    height={32}
-                    className="transition duration-200 rounded-full cursor-pointer ring-2 ring-gray-300 hover:ring-yellow-400 object-cover"
-                  />
+                  {isLoading ? (
+                    <div className="flex items-center justify-center w-12 h-12 bg-white rounded-full shadow ring-2 ring-gray-300">
+                      <Spinner className="w-6 h-6 text-gray-600" />
+                    </div>
+                  ) : (
+                    <Image
+                      src={
+                        user?.profile_image_url || "/images/default-avatar.png"
+                      }
+                      alt="User Avatar"
+                      width={40}
+                      height={40}
+                      className="object-cover w-10 h-10 rounded-full ring-2 ring-gray-300 hover:ring-yellow-400"
+                    />
+                  )}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   side="bottom"
@@ -134,7 +122,7 @@ export default function Topbar() {
                   className="w-48 mt-2 bg-white border shadow-xl rounded-xl animate-in fade-in slide-in-from-top-1"
                 >
                   <DropdownMenuItem
-                    onClick={() => (window.location.href = "/edit-profile")}
+                    onClick={() => (window.location.href = "/my-profile")}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-yellow-100"
                   >
                     <User size={16} />

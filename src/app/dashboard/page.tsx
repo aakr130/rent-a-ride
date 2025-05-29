@@ -54,7 +54,7 @@ export default function DashboardMain() {
                 className="object-cover"
               />
             </div>
-            <h2 className="text-xl font-bold text-gray-800 group-hover:text-indigo-500">
+            <h2 className="text-xl font-bold tepxt-gray-800 group-hover:text-indigo-500">
               Bikes
             </h2>
             <p className="mt-1 text-sm text-gray-500">

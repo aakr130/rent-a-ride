@@ -1,10 +1,13 @@
 "use client";
 
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
+import Spinner from "../icons/spinner";
+import { ArrowLeft } from "lucide-react";
 
 type ProfileFormData = {
   name: string;
@@ -14,6 +17,7 @@ type ProfileFormData = {
 };
 
 export default function EditProfilePage() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const {
     register,
@@ -88,6 +92,7 @@ export default function EditProfilePage() {
 
       if (response.ok) {
         toast.success("Profile updated successfully");
+        await queryClient.invalidateQueries({ queryKey: ["user"] });
         setTimeout(() => router.push("/dashboard"), 1000);
       } else {
         throw new Error(result.message || "Update failed");
@@ -106,13 +111,27 @@ export default function EditProfilePage() {
   };
 
   return (
-    <main className="max-w-xl px-6 py-10 mx-auto mt-20 bg-white rounded-2xl shadow-lg">
+    <main className="relative max-w-xl px-6 py-10 mx-auto mt-20 bg-white shadow-lg rounded-2xl">
+      <button
+        onClick={() => router.back()}
+        aria-label="Go back"
+        className="absolute p-2 transition rounded-full top-4 left-4 hover:bg-gray-100"
+      >
+        <ArrowLeft className="w-5 h-5 text-gray-600" />
+      </button>
+
       <h1 className="mb-8 text-3xl font-bold text-center text-gray-800">
         Edit Profile
       </h1>
 
       {!userLoaded ? (
-        <p className="text-center text-gray-500">Loading...</p>
+        <div className="flex items-center justify-center h-64">
+          <div className="flex items-center justify-center w-16 h-16 bg-white rounded-full shadow ring-2 ring-gray-300">
+            <div className="transition-opacity duration-300 animate-fade-in">
+              <Spinner className="w-8 h-8 text-gray-600" />
+            </div>
+          </div>
+        </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex flex-col items-center gap-4">
@@ -122,11 +141,10 @@ export default function EditProfilePage() {
                 alt="Avatar"
                 width={96}
                 height={96}
-                className="rounded-full border object-cover"
+                className="object-cover border rounded-full"
               />
             )}
 
-            {/* ✅ Controlled file input */}
             <Controller
               name="image"
               control={control}
