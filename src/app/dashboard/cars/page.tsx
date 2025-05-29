@@ -1,72 +1,46 @@
 "use client";
 
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import Link from "next/link";
-
-import { Brand, Car } from "../../../../types";
+import { Brand } from "../../../../types";
 import BrandButton from "../../../../components/BrandButton";
-
-import BottomNavigation from "../../../../components/BottomNavigation";
 import VehicleCard from "../../../../components/VehicleCard";
+import BottomNavigation from "../../../../components/BottomNavigation";
 import Searchbox from "../../../../components/Searchbox";
 
+type Car = {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+  rating: number;
+  seats: number;
+  location: string;
+  description: string;
+  type: string;
+  tags: string[];
+};
+
 export default function CarDashboard() {
+  const [cars, setCars] = useState<Car[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      const res = await fetch("/api/vehicles/all");
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setCars(data.filter((c) => c.type === "car"));
+      }
+    };
+    fetchCars();
+  }, []);
 
   const brands: Brand[] = [
     { id: 1, name: "Tesla", logo: "/images/tesla.jpg" },
     { id: 2, name: "Lamborghini", logo: "/images/lamb.jpg" },
     { id: 3, name: "BMW", logo: "/images/bmw.jpg" },
     { id: 4, name: "Ferrari", logo: "/images/ferr.jpg" },
-  ];
-
-  const allCars: Car[] = [
-    {
-      id: 1,
-      name: "Ferrari-FF",
-      image: "/images/dash-ferr.jpg",
-      rating: 5.0,
-      location: "Jogikuti ,Nepal",
-      seats: 4,
-      price: 5000,
-    },
-    {
-      id: 2,
-      name: "Tesla Model S",
-      image: "/images/dash-tesla.jpg",
-      rating: 5.0,
-      location: "Drivertole, Nepal",
-      seats: 5,
-      price: 7000,
-    },
-    {
-      id: 3,
-      name: "Hyundai Elantra",
-      image: "/images/dash-hyundai.jpg",
-      rating: 4.8,
-      location: "ShankarNagar, Nepal",
-      seats: 5,
-      price: 3000,
-    },
-    {
-      id: 4,
-      name: "Tesla Model S",
-      image: "/images/dash-tesla.jpg",
-      rating: 5.0,
-      location: "Manglapur, Nepal",
-      seats: 5,
-      price: 7000,
-    },
-    {
-      id: 5,
-      name: "Ferrari-FF",
-      image: "/images/dash-ferr.jpg",
-      rating: 5.0,
-      location: "Chandragiri, Nepal",
-      seats: 4,
-      price: 5000,
-    },
   ];
 
   return (
@@ -84,6 +58,7 @@ export default function CarDashboard() {
         </div>
       </section>
 
+      {/* Top Picks */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xl font-semibold">🚘 Top Rated Cars</h2>
@@ -95,14 +70,15 @@ export default function CarDashboard() {
           Hand-picked for performance and comfort
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {allCars
-            .filter((car) => car.rating >= 4.8)
+          {cars
+            .filter((car) => car.tags.includes("top"))
             .map((car) => (
               <VehicleCard key={car.id + "-top"} vehicle={car} />
             ))}
         </div>
       </section>
 
+      {/* Just Added */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xl font-semibold">🚀 Just Added</h2>
@@ -117,12 +93,15 @@ export default function CarDashboard() {
           Explore the latest arrivals to our garage
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {allCars.slice(0, 2).map((car) => (
-            <VehicleCard key={car.id + "-new"} vehicle={car} />
-          ))}
+          {cars
+            .filter((car) => car.tags.includes("just-added"))
+            .map((car) => (
+              <VehicleCard key={car.id + "-new"} vehicle={car} />
+            ))}
         </div>
       </section>
 
+      {/* Electric Picks */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xl font-semibold">🔋 Electric Picks</h2>
@@ -137,8 +116,8 @@ export default function CarDashboard() {
           Zero-emission rides for the future
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {allCars
-            .filter((car) => car.name.toLowerCase().includes("tesla"))
+          {cars
+            .filter((car) => car.tags.includes("electric"))
             .map((car) => (
               <VehicleCard key={car.id + "-ev"} vehicle={car} />
             ))}
