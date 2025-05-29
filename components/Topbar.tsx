@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, Menu, UserRoundCog, X } from "lucide-react";
+import { Bell, Heart, Menu, UserRoundCog, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import "./topbar.css";

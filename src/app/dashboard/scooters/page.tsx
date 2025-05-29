@@ -82,7 +82,7 @@ export default function ScooterDashboard() {
             .map((scooter) => (
               <VehicleCard
                 key={scooter.id + "-top"}
-                car={scooter}
+                vehicle={scooter}
                 type="scooter"
               />
             ))}
@@ -106,7 +106,7 @@ export default function ScooterDashboard() {
           {allScooters.slice(0, 2).map((scooter) => (
             <VehicleCard
               key={scooter.id + "-new"}
-              car={scooter}
+              vehicle={scooter}
               type="scooter"
             />
           ))}

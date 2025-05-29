@@ -82,7 +82,7 @@ export default function BikeDashboard() {
           {allBikes
             .filter((bike) => bike.rating >= 4.8)
             .map((bike) => (
-              <CarCard key={bike.id + "-top"} car={bike} type="bike" />
+              <VehicleCard key={bike.id + "-top"} vehicle={bike} type="bike" />
             ))}
         </div>
       </section>
@@ -102,7 +102,7 @@ export default function BikeDashboard() {
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           {allBikes.slice(0, 2).map((bike) => (
-            <VehicleCard key={bike.id + "-new"} car={bike} type="bike" />
+            <VehicleCard key={bike.id + "-new"} vehicle={bike} type="bike" />
           ))}
         </div>
       </section>

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+
 import Link from "next/link";
-import { Search, Bell } from "lucide-react";
+
 import { Brand, Car } from "../../../../types";
 import BrandButton from "../../../../components/BrandButton";
-import CarCard from "../../../../components/VehicleCard";
+
 import BottomNavigation from "../../../../components/BottomNavigation";
 import VehicleCard from "../../../../components/VehicleCard";
 import Searchbox from "../../../../components/Searchbox";
@@ -98,7 +98,7 @@ export default function CarDashboard() {
           {allCars
             .filter((car) => car.rating >= 4.8)
             .map((car) => (
-              <VehicleCard key={car.id + "-top"} car={car} />
+              <VehicleCard key={car.id + "-top"} vehicle={car} />
             ))}
         </div>
       </section>
@@ -118,7 +118,7 @@ export default function CarDashboard() {
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           {allCars.slice(0, 2).map((car) => (
-            <VehicleCard key={car.id + "-new"} car={car} />
+            <VehicleCard key={car.id + "-new"} vehicle={car} />
           ))}
         </div>
       </section>
@@ -140,7 +140,7 @@ export default function CarDashboard() {
           {allCars
             .filter((car) => car.name.toLowerCase().includes("tesla"))
             .map((car) => (
-              <VehicleCard key={car.id + "-ev"} car={car} />
+              <VehicleCard key={car.id + "-ev"} vehicle={car} />
             ))}
         </div>
       </section>
