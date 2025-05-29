@@ -16,11 +16,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUser } from "@/app/hooks/useUser";
 import Spinner from "@/app/icons/spinner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function Topbar() {
   const { data, isLoading } = useUser();
   const user = data?.user;
   const isLoggedIn = data?.authenticated;
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
@@ -81,7 +93,11 @@ export default function Topbar() {
           ))}
 
           {/* Conditional: show when NOT logged in */}
-          {!isLoggedIn ? (
+          {isLoading ? (
+            <div className="flex items-center justify-center w-10 h-10">
+              <Spinner className="w-6 h-6 text-gray-600 transition-opacity animate-fade-in" />
+            </div>
+          ) : !isLoggedIn ? (
             <>
               <Link
                 href="/login"
@@ -137,7 +153,7 @@ export default function Topbar() {
                     Edit Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={handleLogout}
+                    onClick={() => setShowLogoutDialog(true)}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 cursor-pointer hover:bg-red-100"
                   >
                     <LogOut size={16} />
@@ -149,6 +165,28 @@ export default function Topbar() {
           )}
         </div>
       </div>
+      {showLogoutDialog && (
+        <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure you want to logout?
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="cursor-pointer">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="cursor-pointer"
+                onClick={handleLogout}
+              >
+                Confirm Logout
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </nav>
   );
 }
