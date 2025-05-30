@@ -7,11 +7,12 @@ import BrandButton from "../../../../components/BrandButton";
 import VehicleCard from "../../../../components/VehicleCard";
 import BottomNavigation from "../../../../components/BottomNavigation";
 import Searchbox from "../../../../components/Searchbox";
+import Spinner from "@/app/icons/spinner";
 
 type Bike = {
   id: number;
   name: string;
-  image: string;
+  images: string[];
   price: number;
   rating: number;
   seats: number;
@@ -23,13 +24,20 @@ type Bike = {
 
 export default function BikeDashboard() {
   const [bikes, setBikes] = useState<Bike[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBikes = async () => {
-      const res = await fetch("/api/vehicles/all");
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setBikes(data.filter((v) => v.type === "bike"));
+      try {
+        const res = await fetch("/api/vehicles/all");
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setBikes(data.filter((v) => v.type === "bike"));
+        }
+      } catch (error) {
+        console.error("Error loading bikes", error);
+      } finally {
+        setTimeout(() => setLoading(false), 200); // slight delay for UX
       }
     };
     fetchBikes();
@@ -41,6 +49,14 @@ export default function BikeDashboard() {
     { id: 3, name: "Kawasaki", logo: "/images/kawasaki.jpg" },
     { id: 4, name: "Yamaha", logo: "/images/yamaha.jpg" },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner className="w-8 h-8 text-gray-600" />
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen px-6 pb-20 text-gray-900 pt-28 bg-gradient-to-b from-white via-slate-100 to-white">

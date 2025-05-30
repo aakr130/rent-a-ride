@@ -24,7 +24,7 @@ export default async function handler(
     // 2. Extract and validate input
     const {
       name,
-      image,
+      images,
       price,
       rating,
       seats,
@@ -36,7 +36,7 @@ export default async function handler(
 
     if (
       !name ||
-      !image ||
+      !images?.length ||
       !price ||
       !rating ||
       !seats ||
@@ -47,12 +47,12 @@ export default async function handler(
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // 3. Insert into `vehicles` table (including tags)
+    // 3. Insert into `vehicles` table (with array of images)
     await db.query(
       `INSERT INTO vehicles 
-      (name, image, price, rating, seats, location, description, type, tags, created_at)
+      (name, images, price, rating, seats, location, description, type, tags, created_at)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())`,
-      [name, image, price, rating, seats, location, description, type, tags]
+      [name, images, price, rating, seats, location, description, type, tags]
     );
 
     return res

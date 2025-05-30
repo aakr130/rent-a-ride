@@ -41,13 +41,19 @@ export default function LoginPage() {
       if (res.ok) {
         toast.success("Login successful");
         localStorage.setItem("user", JSON.stringify(result.user));
-        window.location.href = "/dashboard";
+
+        // ⤵️ Role-based redirection
+        if (result.user.role === "admin") {
+          window.location.href = "/admin/dashboard";
+        } else {
+          window.location.href = "/dashboard";
+        }
       } else {
         toast.error(result.message || "Invalid credentials");
       }
     } catch (err) {
-      console.error(err);
-      toast.error("Login failed");
+      console.error("❌ Login error:", err);
+      toast.error("Login failed. Please try again.");
     }
   };
 

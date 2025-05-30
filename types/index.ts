@@ -8,7 +8,7 @@ export interface Brand {
 export interface Car {
   id: number;
   name: string;
-  image: string;
+  images: string[];
   rating: number;
   location?: string;
   seats?: number;

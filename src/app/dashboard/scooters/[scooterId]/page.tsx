@@ -6,67 +6,47 @@ import Image from "next/image";
 import Spinner from "@/app/icons/spinner";
 import { ArrowLeft } from "lucide-react";
 
+type Vehicle = {
+  id: number;
+  name: string;
+  images: string[];
+  price: number;
+  rating: number;
+  seats: number;
+  location: string;
+  description: string;
+  type: string;
+  tags: string[];
+};
+
 export default function ScooterDetailPage() {
   const params = useParams();
   const scooterId = Array.isArray(params?.scooterId)
-    ? params.scooterId[0]
-    : params?.scooterId;
+    ? parseInt(params.scooterId[0])
+    : parseInt(params?.scooterId || "");
+
   const router = useRouter();
-  const [scooter, setScooter] = useState<any>(null);
+  const [scooter, setScooter] = useState<Vehicle | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const allScooters = [
-      {
-        id: "1",
-        name: "Honda Dio",
-        image: "/images/dio.png",
-        gallery: [
-          "/images/scooter-1.jpg",
-          "/images/scooter-2.jpg",
-          "/images/scooter-3.jpg",
-        ],
-        rating: 4.9,
-        location: "Butwal, Nepal",
-        price: 900,
-        description:
-          "Compact, efficient and stylish for urban commuting. Perfect for weaving through city streets with ease.",
-      },
-      {
-        id: "2",
-        name: "Vespa Elegante",
-        image: "/images/vespa.jpg",
-        gallery: [
-          "/images/vespa-1.jpg",
-          "/images/vespa-2.jpg",
-          "/images/vespa-3.jpg",
-        ],
-        rating: 4.8,
-        location: "Pokhara, Nepal",
-        price: 1200,
-        description:
-          "Elegant design with premium finish and powerful engine. Ideal for stylish rides around town.",
-      },
-      {
-        id: "3",
-        name: "TVS Jupiter",
-        image: "/images/tvs.jpg",
-        gallery: [
-          "/images/tvs-1.jpg",
-          "/images/tvs-2.jpg",
-          "/images/tvs-3.jpg",
-        ],
-        rating: 4.7,
-        location: "Kathmandu, Nepal",
-        price: 1000,
-        description:
-          "Balanced ride offering excellent mileage, comfort and practicality for daily commutes.",
-      },
-    ];
+    const fetchScooter = async () => {
+      try {
+        const res = await fetch("/api/vehicles/all");
+        const data = await res.json();
 
-    const found = allScooters.find((s) => s.id === scooterId);
-    setScooter(found);
-    setLoading(false);
+        if (Array.isArray(data)) {
+          const found = data.find((v: Vehicle) => v.id === scooterId);
+          setScooter(found || null);
+        }
+      } catch (err) {
+        console.error("Error fetching scooter data", err);
+      } finally {
+        setTimeout(() => setLoading(false), 300); // Ensures spinner displays at least briefly
+      }
+    };
+
+    if (scooterId) fetchScooter();
   }, [scooterId]);
 
   if (loading) {
@@ -86,7 +66,7 @@ export default function ScooterDetailPage() {
   }
 
   return (
-    <main className="max-w-5xl px-4 py-10 mx-auto">
+    <main className="max-w-5xl px-4 py-10 mx-auto animate-fade-in">
       {/* Back Button */}
       <button
         onClick={() => router.back()}
@@ -96,10 +76,10 @@ export default function ScooterDetailPage() {
         <ArrowLeft className="w-5 h-5 text-gray-700" />
       </button>
 
-      {/* Hero Image */}
+      {/* Hero Section */}
       <div className="relative w-full mt-10 mb-4 overflow-hidden bg-white shadow rounded-xl">
         <Image
-          src={scooter.image}
+          src={scooter.images?.[0] || "/images/placeholder.jpg"}
           alt={scooter.name}
           width={1000}
           height={400}
@@ -113,7 +93,7 @@ export default function ScooterDetailPage() {
 
       {/* Gallery */}
       <div className="flex gap-4 pb-2 mb-6 overflow-x-auto">
-        {scooter.gallery?.map((img: string, idx: number) => (
+        {scooter.images?.map((img, idx) => (
           <Image
             key={idx}
             src={img}
@@ -133,8 +113,8 @@ export default function ScooterDetailPage() {
             <p>{scooter.rating}</p>
           </div>
           <div>
-            <p className="font-semibold">📍 Location</p>
-            <p>{scooter.location}</p>
+            <p className="font-semibold">🪑 Seats</p>
+            <p>{scooter.seats}</p>
           </div>
           <div>
             <p className="font-semibold">💵 Price</p>

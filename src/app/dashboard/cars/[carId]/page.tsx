@@ -6,64 +6,49 @@ import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import Spinner from "@/app/icons/spinner";
 
-const allCars = [
-  {
-    id: "1",
-    name: "Ferrari-FF",
-    image: "/images/dash-ferr.jpg",
-    gallery: ["/images/car-1.jpg", "/images/car-2.jpg", "/images/car-3.jpg"],
-    rating: 5.0,
-    location: "Jogikuti ,Nepal",
-    seats: 4,
-    price: 5000,
-    description:
-      "The Ferrari FF combines breathtaking speed with versatile four-seat practicality. Ideal for thrilling journeys and bold impressions.",
-  },
-  {
-    id: "2",
-    name: "Tesla Model S",
-    image: "/images/dash-tesla.jpg",
-    gallery: [
-      "/images/dash-tesla.jpg",
-      "/images/dash-tesla.jpg",
-      "/images/tesla-3.jpg",
-    ],
-    rating: 5.0,
-    location: "Drivertole, Nepal",
-    seats: 5,
-    price: 7000,
-    description:
-      "Experience the future with the Tesla Model S – luxury, performance, and sustainability in one electric powerhouse.",
-  },
-  {
-    id: "3",
-    name: "Hyundai Elantra",
-    image: "/images/dash-hyundai.jpg",
-    gallery: [
-      "/images/hyundai-1.jpg",
-      "/images/hyundai-2.jpg",
-      "/images/hyundai-3.jpg",
-    ],
-    rating: 4.8,
-    location: "ShankarNagar, Nepal",
-    seats: 5,
-    price: 3000,
-    description:
-      "A reliable and stylish companion for daily drives and weekend getaways. Comfort, efficiency, and elegance in one.",
-  },
-];
+type Vehicle = {
+  id: number;
+  name: string;
+  images: string[];
+  price: number;
+  rating: number;
+  seats: number;
+  location: string;
+  description: string;
+  type: string;
+  tags: string[];
+};
 
 export default function CarDetailPage() {
   const params = useParams();
-  const carId = Array.isArray(params?.carId) ? params.carId[0] : params?.carId;
+  const carId = Array.isArray(params?.carId)
+    ? parseInt(params.carId[0])
+    : parseInt(params?.carId || "");
+
   const router = useRouter();
-  const [car, setCar] = useState<any>(null);
+  const [car, setCar] = useState<Vehicle | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const found = allCars.find((c) => c.id === carId);
-    setCar(found);
-    setLoading(false);
+    const fetchCar = async () => {
+      try {
+        const res = await fetch("/api/vehicles/all");
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          const found = data.find((v: Vehicle) => v.id === carId);
+          setCar(found || null);
+        }
+      } catch (err) {
+        console.error("Error fetching car data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (carId) {
+      fetchCar();
+    }
   }, [carId]);
 
   if (loading) {
@@ -96,7 +81,7 @@ export default function CarDetailPage() {
       {/* Hero Section */}
       <div className="relative w-full mt-10 mb-4 overflow-hidden bg-white shadow rounded-xl">
         <Image
-          src={car.image}
+          src={car.images?.[0] || "/images/placeholder.jpg"}
           alt={car.name}
           width={1000}
           height={400}
@@ -110,7 +95,7 @@ export default function CarDetailPage() {
 
       {/* Gallery */}
       <div className="flex gap-4 pb-2 mb-6 overflow-x-auto">
-        {car.gallery?.map((img: string, idx: number) => (
+        {car.images?.map((img: string, idx: number) => (
           <Image
             key={idx}
             src={img}

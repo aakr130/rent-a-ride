@@ -7,11 +7,12 @@ import BrandButton from "../../../../components/BrandButton";
 import VehicleCard from "../../../../components/VehicleCard";
 import BottomNavigation from "../../../../components/BottomNavigation";
 import Searchbox from "../../../../components/Searchbox";
+import Spinner from "@/app/icons/spinner";
 
 type Car = {
   id: number;
   name: string;
-  image: string;
+  images: string[];
   price: number;
   rating: number;
   seats: number;
@@ -23,13 +24,20 @@ type Car = {
 
 export default function CarDashboard() {
   const [cars, setCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCars = async () => {
-      const res = await fetch("/api/vehicles/all");
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setCars(data.filter((c) => c.type === "car"));
+      try {
+        const res = await fetch("/api/vehicles/all");
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setCars(data.filter((c) => c.type === "car"));
+        }
+      } catch (error) {
+        console.error("Error loading cars", error);
+      } finally {
+        setTimeout(() => setLoading(false), 200); // ⏳ UX-friendly delay
       }
     };
     fetchCars();
@@ -41,6 +49,14 @@ export default function CarDashboard() {
     { id: 3, name: "BMW", logo: "/images/bmw.jpg" },
     { id: 4, name: "Ferrari", logo: "/images/ferr.jpg" },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner className="w-8 h-8 text-gray-600" />
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen px-6 pb-20 text-gray-900 pt-28 bg-gradient-to-b from-white via-slate-100 to-white">

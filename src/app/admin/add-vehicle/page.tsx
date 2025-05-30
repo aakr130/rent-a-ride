@@ -1,11 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 export default function AddVehiclePage() {
+  const router = useRouter();
+
   const [form, setForm] = useState({
     name: "",
-    image: "",
+    images: [""],
     price: "",
     rating: "",
     seats: "",
@@ -14,8 +19,6 @@ export default function AddVehiclePage() {
     type: "car",
     tags: [] as string[],
   });
-
-  const [message, setMessage] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -37,6 +40,16 @@ export default function AddVehiclePage() {
     }
   };
 
+  const handleImageChange = (index: number, value: string) => {
+    const updatedImages = [...form.images];
+    updatedImages[index] = value;
+    setForm({ ...form, images: updatedImages });
+  };
+
+  const addImageField = () => {
+    setForm({ ...form, images: [...form.images, ""] });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -55,10 +68,10 @@ export default function AddVehiclePage() {
 
     const data = await res.json();
     if (res.ok) {
-      setMessage("✅ Vehicle added successfully!");
+      toast.success("✅ Vehicle added successfully!");
       setForm({
         name: "",
-        image: "",
+        images: [""],
         price: "",
         rating: "",
         seats: "",
@@ -68,12 +81,22 @@ export default function AddVehiclePage() {
         tags: [],
       });
     } else {
-      setMessage(`❌ ${data.error || "Failed to add vehicle."}`);
+      toast.error(data.error || "❌ Failed to add vehicle.");
     }
   };
 
   return (
     <main className="max-w-5xl p-6 mx-auto mt-12 bg-white rounded shadow-md">
+      <div className="flex items-center mb-6">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-blue-600"
+        >
+          <ArrowLeft size={18} />
+          Back
+        </button>
+      </div>
+
       <h1 className="mb-6 text-3xl font-bold text-gray-800">Add New Vehicle</h1>
 
       <form
@@ -88,14 +111,29 @@ export default function AddVehiclePage() {
           onChange={handleChange}
           required
         />
-        <input
-          name="image"
-          placeholder="Image URL"
-          className="input"
-          value={form.image}
-          onChange={handleChange}
-          required
-        />
+        <div className="flex flex-col gap-2 md:col-span-2">
+          <label className="text-sm font-medium text-gray-600">
+            Image URLs
+          </label>
+          {form.images.map((img, idx) => (
+            <input
+              key={idx}
+              type="text"
+              value={img}
+              onChange={(e) => handleImageChange(idx, e.target.value)}
+              placeholder={`Image URL ${idx + 1}`}
+              className="input"
+              required={idx === 0}
+            />
+          ))}
+          <button
+            type="button"
+            onClick={addImageField}
+            className="text-sm text-blue-600 hover:underline"
+          >
+            + Add another image
+          </button>
+        </div>
         <input
           name="price"
           placeholder="Price"
@@ -183,8 +221,6 @@ export default function AddVehiclePage() {
           Add Vehicle
         </button>
       </form>
-
-      {message && <p className="mt-4 text-sm text-center">{message}</p>}
     </main>
   );
 }

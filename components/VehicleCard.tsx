@@ -27,16 +27,12 @@ export default function VehicleCard({
         {/* Image */}
         <div className="relative h-40">
           <Image
-            src={
-              vehicle.image ||
-              `https://placehold.co/600x400/222/fff?text=${encodeURIComponent(
-                vehicle.name
-              )}`
-            }
+            src={vehicle.images?.[0] || "/images/placeholder.jpg"}
             alt={vehicle.name}
             fill
             className="object-cover"
           />
+
           <button
             className="absolute top-2 right-2 p-1.5 rounded-full bg-white shadow"
             onClick={(e) => {

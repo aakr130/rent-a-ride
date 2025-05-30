@@ -120,7 +120,7 @@ export default function Topbar() {
                     <div className="flex items-center justify-center w-12 h-12 bg-white rounded-full shadow ring-2 ring-gray-300">
                       <Spinner className="w-6 h-6 text-gray-600" />
                     </div>
-                  ) : (
+                  ) : user?.role === "user" ? (
                     <Image
                       src={
                         user?.profile_image_url || "/images/default-avatar.png"
@@ -130,8 +130,13 @@ export default function Topbar() {
                       height={40}
                       className="object-cover w-10 h-10 rounded-full ring-2 ring-gray-300 hover:ring-yellow-400"
                     />
+                  ) : (
+                    <div className="flex items-center justify-center w-10 h-10 text-sm font-bold text-white bg-yellow-500 rounded-full">
+                      A
+                    </div>
                   )}
                 </DropdownMenuTrigger>
+
                 <DropdownMenuContent
                   side="bottom"
                   align="end"

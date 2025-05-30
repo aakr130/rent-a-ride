@@ -6,39 +6,49 @@ import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import Spinner from "@/app/icons/spinner";
 
+type Vehicle = {
+  id: number;
+  name: string;
+  images: string[];
+  price: number;
+  rating: number;
+  seats: number;
+  location: string;
+  description: string;
+  type: string;
+  tags: string[];
+};
+
 export default function BikeDetailPage() {
   const params = useParams();
   const bikeId = Array.isArray(params?.bikeId)
-    ? params.bikeId[0]
-    : params?.bikeId;
+    ? parseInt(params.bikeId[0])
+    : parseInt(params?.bikeId || "");
 
   const router = useRouter();
-  const [bike, setBike] = useState<any>(null);
+  const [bike, setBike] = useState<Vehicle | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fakeBikes = [
-      {
-        id: "1",
-        name: "Royal Enfield Hunter",
-        image: "/images/dash-royal.jpg",
-        gallery: [
-          "/images/bike-1.jpg",
-          "/images/bike-2.jpg",
-          "/images/bike-3.jpg",
-        ],
-        rating: 4.9,
-        location: "Bhalwari, Nepal",
-        seats: 2,
-        price: 1500,
-        description:
-          "A classic ride blending vintage charm with modern power. Perfect for long rides and rugged roads.",
-      },
-    ];
+    const fetchBike = async () => {
+      try {
+        const res = await fetch("/api/vehicles/all");
+        const data = await res.json();
 
-    const found = fakeBikes.find((b) => b.id === bikeId);
-    setBike(found);
-    setLoading(false);
+        if (Array.isArray(data)) {
+          const found = data.find((v: Vehicle) => v.id === bikeId);
+          setBike(found || null);
+        }
+      } catch (err) {
+        console.error("Error fetching bike data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (bikeId) {
+      fetchBike();
+    }
   }, [bikeId]);
 
   if (loading) {
@@ -71,7 +81,7 @@ export default function BikeDetailPage() {
       {/* Hero Section */}
       <div className="relative w-full mt-10 mb-4 overflow-hidden bg-white shadow rounded-xl">
         <Image
-          src={bike.image}
+          src={bike.images?.[0] || "/images/placeholder.jpg"}
           alt={bike.name}
           width={1000}
           height={400}
@@ -85,7 +95,7 @@ export default function BikeDetailPage() {
 
       {/* Gallery */}
       <div className="flex gap-4 pb-2 mb-6 overflow-x-auto">
-        {bike.gallery?.map((img: string, idx: number) => (
+        {bike.images?.map((img: string, idx: number) => (
           <Image
             key={idx}
             src={img}

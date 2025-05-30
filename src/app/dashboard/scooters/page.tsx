@@ -7,11 +7,12 @@ import BrandButton from "../../../../components/BrandButton";
 import VehicleCard from "../../../../components/VehicleCard";
 import BottomNavigation from "../../../../components/BottomNavigation";
 import Searchbox from "../../../../components/Searchbox";
+import Spinner from "@/app/icons/spinner";
 
 type Scooter = {
   id: number;
   name: string;
-  image: string;
+  images: string[];
   price: number;
   rating: number;
   seats: number;
@@ -23,13 +24,20 @@ type Scooter = {
 
 export default function ScooterDashboard() {
   const [scooters, setScooters] = useState<Scooter[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchScooters = async () => {
-      const res = await fetch("/api/vehicles/all");
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setScooters(data.filter((v) => v.type === "scooter"));
+      try {
+        const res = await fetch("/api/vehicles/all");
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setScooters(data.filter((v) => v.type === "scooter"));
+        }
+      } catch (error) {
+        console.error("Error loading scooters", error);
+      } finally {
+        setTimeout(() => setLoading(false), 200);
       }
     };
     fetchScooters();
@@ -40,6 +48,13 @@ export default function ScooterDashboard() {
     { id: 2, name: "Vespa", logo: "/images/vespa.jpg" },
     { id: 3, name: "TVS", logo: "/images/tvs.jpg" },
   ];
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner className="w-8 h-8 text-gray-600" />
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen px-6 pb-20 text-gray-900 pt-28 bg-gradient-to-b from-white via-slate-100 to-white">
