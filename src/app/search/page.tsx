@@ -36,7 +36,7 @@ export default function SearchPage() {
     {
       id: 1,
       name: "Tesla Model S",
-      image: "https://placehold.co/600x400/222/fff?text=Tesla+Model+S",
+      images: ["https://placehold.co/600x400/222/fff?text=Tesla+Model+S"],
       rating: 5.0,
       location: "Chicago, USA",
       price: 100,
@@ -45,7 +45,7 @@ export default function SearchPage() {
     {
       id: 2,
       name: "Ferrari LaFerrari",
-      image: "https://placehold.co/600x400/222/fff?text=Ferrari+LaFerrari",
+      images: ["https://placehold.co/600x400/222/fff?text=Ferrari+LaFerrari"],
       rating: 5.0,
       location: "Washington DC",
       price: 100,
@@ -54,7 +54,9 @@ export default function SearchPage() {
     {
       id: 3,
       name: "Lamborghini Aventador",
-      image: "https://placehold.co/600x400/222/fff?text=Lamborghini+Aventador",
+      images: [
+        "https://placehold.co/600x400/222/fff?text=Lamborghini+Aventador",
+      ],
       rating: 4.9,
       location: "Washington DC",
       price: 100,
@@ -63,7 +65,7 @@ export default function SearchPage() {
     {
       id: 4,
       name: "BMW GT3 M2",
-      image: "https://placehold.co/600x400/222/fff?text=BMW+GT3+M2",
+      images: ["https://placehold.co/600x400/222/fff?text=BMW+GT3+M2"],
       rating: 5.0,
       location: "New York, USA",
       price: 100,
@@ -75,8 +77,9 @@ export default function SearchPage() {
     {
       id: 5,
       name: "Ferrari LaFerrari",
-      image:
+      images: [
         "https://placehold.co/600x400/222/fff?text=Ferrari+LaFerrari+White",
+      ],
       rating: 5.0,
       price: 100,
       hasBookNow: false,
