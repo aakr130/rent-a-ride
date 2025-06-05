@@ -19,7 +19,7 @@ export default function VehicleCard({
 }: VehicleCardProps) {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
-  const detailLink = `/dashboard/${type}s/${vehicle.id}`; // ✅ handles /cars/, /bikes/, /scooters/
+  const detailLink = `/dashboard/${type}s/${vehicle.id}`;
 
   return (
     <Link href={detailLink} className="block mb-1 font-medium hover:underline">
@@ -32,11 +32,10 @@ export default function VehicleCard({
             fill
             className="object-cover"
           />
-
           <button
             className="absolute top-2 right-2 p-1.5 rounded-full bg-white shadow"
             onClick={(e) => {
-              e.preventDefault(); // prevent navigation when toggling favorite
+              e.preventDefault();
               setIsFavorite(!isFavorite);
             }}
             aria-label="Toggle Favorite"
@@ -47,13 +46,23 @@ export default function VehicleCard({
 
         {/* Content */}
         <div className="p-3">
-          {vehicle.name}
+          {/* ✅ BRAND */}
+          {vehicle.brand && (
+            <p className="mb-1 text-xs font-semibold text-blue-600 uppercase">
+              {vehicle.brand}
+            </p>
+          )}
 
+          {/* Vehicle Name */}
+          <p className="text-sm font-medium text-gray-900">{vehicle.name}</p>
+
+          {/* Rating */}
           <div className="flex items-center gap-1 mb-1">
             <span className="text-sm">{vehicle.rating}</span>
             <Image src="/images/star.png" alt="Rating" width={12} height={12} />
           </div>
 
+          {/* Location */}
           {vehicle.location && (
             <div className="flex items-center gap-1 mb-2 text-xs text-gray-500">
               <Image
@@ -66,6 +75,7 @@ export default function VehicleCard({
             </div>
           )}
 
+          {/* Seats & Price */}
           <div className="flex items-center justify-between mb-2 text-xs text-gray-500">
             {vehicle.seats && (
               <div className="flex items-center gap-1">
@@ -83,6 +93,7 @@ export default function VehicleCard({
             </div>
           </div>
 
+          {/* Book Now (if search context) */}
           {search && (
             <div className="flex items-center justify-between mt-2">
               <div className="font-medium">Rs.{vehicle.price}/Day</div>

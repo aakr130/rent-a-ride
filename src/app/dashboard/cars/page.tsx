@@ -8,6 +8,7 @@ import VehicleCard from "../../../../components/VehicleCard";
 import BottomNavigation from "../../../../components/BottomNavigation";
 import Searchbox from "../../../../components/Searchbox";
 import Spinner from "@/app/icons/spinner";
+import { useSearchParams } from "next/navigation";
 
 type Car = {
   id: number;
@@ -19,20 +20,40 @@ type Car = {
   location: string;
   description: string;
   type: string;
+  brand: string;
   tags: string[];
 };
 
 export default function CarDashboard() {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const searchParams = useSearchParams();
+  const selectedBrand = searchParams?.get("brand");
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
         const res = await fetch("/api/vehicles/all");
         const data = await res.json();
+
         if (Array.isArray(data)) {
-          setCars(data.filter((c) => c.type === "car"));
+          const carList = data.filter((c) => c.type === "car");
+          setCars(carList);
+
+          // Dynamically extract brand list with images
+          const uniqueBrandsMap = new Map<string, Brand>();
+          carList.forEach((car) => {
+            if (!uniqueBrandsMap.has(car.brand)) {
+              uniqueBrandsMap.set(car.brand, {
+                id: uniqueBrandsMap.size + 1,
+                name: car.brand,
+                logo: car.images[0] || "",
+              });
+            }
+          });
+
+          setBrands(Array.from(uniqueBrandsMap.values()));
         }
       } catch (error) {
         console.error("Error loading cars", error);
@@ -40,15 +61,9 @@ export default function CarDashboard() {
         setTimeout(() => setLoading(false), 200);
       }
     };
+
     fetchCars();
   }, []);
-
-  const brands: Brand[] = [
-    { id: 1, name: "Tesla", logo: "/images/tesla.jpg" },
-    { id: 2, name: "Lamborghini", logo: "/images/lamb.jpg" },
-    { id: 3, name: "BMW", logo: "/images/bmw.jpg" },
-    { id: 4, name: "Ferrari", logo: "/images/ferr.jpg" },
-  ];
 
   if (loading) {
     return (
@@ -68,7 +83,7 @@ export default function CarDashboard() {
         <h2 className="mb-4 text-lg font-semibold text-gray-700">Car Brands</h2>
         <div className="flex gap-5 pb-2 overflow-x-auto no-scrollbar">
           {brands.map((brand) => (
-            <BrandButton key={brand.id} brand={brand} />
+            <BrandButton key={brand.id} brand={brand} type="car" />
           ))}
         </div>
       </section>

@@ -9,10 +9,13 @@ export interface Car {
   id: number;
   name: string;
   images: string[];
+  brand: string;
   rating: number;
   location?: string;
+  type: string;
   seats?: number;
   price: number;
+  tags: string[];
   hasBookNow?: boolean;
   description?: string;
 }

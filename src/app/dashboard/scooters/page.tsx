@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Brand } from "../../../../types";
 import BrandButton from "../../../../components/BrandButton";
 import VehicleCard from "../../../../components/VehicleCard";
@@ -19,20 +20,42 @@ type Scooter = {
   location: string;
   description: string;
   type: string;
+  brand: string;
   tags: string[];
 };
 
 export default function ScooterDashboard() {
   const [scooters, setScooters] = useState<Scooter[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const selectedBrand = searchParams?.get("brand");
 
   useEffect(() => {
     const fetchScooters = async () => {
       try {
         const res = await fetch("/api/vehicles/all");
         const data = await res.json();
+
         if (Array.isArray(data)) {
-          setScooters(data.filter((v) => v.type === "scooter"));
+          const scooterList = data.filter((v) => v.type === "scooter");
+          setScooters(scooterList);
+
+          const brandMap = new Map<string, Brand>();
+          scooterList.forEach((scooter) => {
+            const raw = scooter.brand?.trim();
+            if (!raw) return;
+            const key = raw.toLowerCase();
+            if (!brandMap.has(key)) {
+              brandMap.set(key, {
+                id: brandMap.size + 1,
+                name: raw,
+                logo: scooter.images?.[0] || "/images/placeholder.jpg",
+              });
+            }
+          });
+
+          setBrands(Array.from(brandMap.values()));
         }
       } catch (error) {
         console.error("Error loading scooters", error);
@@ -43,11 +66,11 @@ export default function ScooterDashboard() {
     fetchScooters();
   }, []);
 
-  const brands: Brand[] = [
-    { id: 1, name: "Honda", logo: "/images/dio.jpg" },
-    { id: 2, name: "Vespa", logo: "/images/vespa.jpg" },
-    { id: 3, name: "TVS", logo: "/images/tvs.jpg" },
-  ];
+  const filteredScooters = scooters.filter((scooter) => {
+    if (!selectedBrand || selectedBrand.toLowerCase() === "all") return true;
+    return scooter.brand?.toLowerCase() === selectedBrand.toLowerCase();
+  });
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -62,13 +85,14 @@ export default function ScooterDashboard() {
         <Searchbox />
       </div>
 
+      {/* Brands */}
       <section className="mb-10">
         <h2 className="mb-4 text-lg font-semibold text-gray-700">
           Scooter Brands
         </h2>
         <div className="flex gap-5 pb-2 overflow-x-auto no-scrollbar">
           {brands.map((brand) => (
-            <BrandButton key={brand.id} brand={brand} />
+            <BrandButton key={brand.id} brand={brand} type="scooter" />
           ))}
         </div>
       </section>
@@ -88,9 +112,10 @@ export default function ScooterDashboard() {
           City rides that deliver smooth and smart performance
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {scooters.filter((s) => s.tags?.includes("top")).length > 0 ? (
-            scooters
-              .filter((scooter) => scooter.tags?.includes("top"))
+          {filteredScooters.filter((s) => s.tags?.includes("top")).length >
+          0 ? (
+            filteredScooters
+              .filter((s) => s.tags?.includes("top"))
               .map((scooter) => (
                 <VehicleCard
                   key={scooter.id + "-top"}
@@ -121,9 +146,10 @@ export default function ScooterDashboard() {
           Discover our newest smart commuters
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {scooters.filter((s) => s.tags?.includes("just-added")).length > 0 ? (
-            scooters
-              .filter((scooter) => scooter.tags?.includes("just-added"))
+          {filteredScooters.filter((s) => s.tags?.includes("just-added"))
+            .length > 0 ? (
+            filteredScooters
+              .filter((s) => s.tags?.includes("just-added"))
               .map((scooter) => (
                 <VehicleCard
                   key={scooter.id + "-new"}
@@ -154,9 +180,10 @@ export default function ScooterDashboard() {
           Eco-friendly rides for your daily commute
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {scooters.filter((s) => s.tags?.includes("electric")).length > 0 ? (
-            scooters
-              .filter((scooter) => scooter.tags?.includes("electric"))
+          {filteredScooters.filter((s) => s.tags?.includes("electric")).length >
+          0 ? (
+            filteredScooters
+              .filter((s) => s.tags?.includes("electric"))
               .map((scooter) => (
                 <VehicleCard
                   key={scooter.id + "-ev"}

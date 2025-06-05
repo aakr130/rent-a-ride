@@ -1,29 +1,49 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { Brand } from "../types";
+import { useSearchParams } from "next/navigation";
+import clsx from "clsx";
 
-interface BrandFilterProps {
-  brand: Brand;
+interface BrandProps {
+  brand: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+  type?: "car" | "bike" | "scooter";
 }
 
-export default function BrandFilter({ brand }: BrandFilterProps) {
-  const isActive = brand.id === 0; // ALL is active by default
+export default function BrandFilter({ brand, type = "car" }: BrandProps) {
+  const searchParams = useSearchParams();
+  const selected = searchParams?.get("brand");
+  const isSelected = selected?.toLowerCase() === brand.name.toLowerCase();
+
+  const isAll = brand.name.toLowerCase() === "all";
+
+  const href = isAll
+    ? `/dashboard/${type}s` // ✅ Redirects to dashboard
+    : `/search?type=${type}&brand=${brand.name.toLowerCase()}`; // ✅ Stays on search page with brand filter
 
   return (
     <Link
-      href={`/search?brand=${brand.name.toLowerCase()}`}
-      className={`flex items-center gap-2 px-4 py-2 rounded-full ${
-        isActive ? "bg-black text-white" : "bg-gray-100 text-black"
-      }`}
+      href={href}
+      className={clsx(
+        "flex flex-col items-center gap-2 min-w-[70px] group",
+        isSelected && "bg-blue-100 rounded-md py-1"
+      )}
     >
-      <Image
-        src={brand.logo || "/placeholder.svg"}
-        alt={brand.name}
-        width={20}
-        height={20}
-        className={isActive ? "invert" : ""}
-      />
-      <span className="text-sm">{brand.name}</span>
+      <div className="relative overflow-hidden transition-transform border-2 border-green-300 rounded-full shadow-md w-14 h-14 group-hover:scale-105">
+        <Image
+          src={brand.logo}
+          alt={brand.name}
+          fill
+          className="object-cover"
+        />
+      </div>
+      <span className="text-[15px] font-medium text-gray-800 transition-colors group-hover:text-blue-500">
+        {brand.name}
+      </span>
     </Link>
   );
 }

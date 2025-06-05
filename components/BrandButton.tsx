@@ -1,20 +1,40 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { Brand } from "../types";
+import { useSearchParams } from "next/navigation";
+import clsx from "clsx";
 
 interface BrandButtonProps {
-  brand: Brand;
+  brand: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+  type: "car" | "bike" | "scooter";
 }
 
-export default function BrandButton({ brand }: BrandButtonProps) {
+export default function BrandButton({ brand, type }: BrandButtonProps) {
+  const searchParams = useSearchParams();
+  const selectedBrand = searchParams?.get("brand");
+  const isSelected = selectedBrand?.toLowerCase() === brand.name.toLowerCase();
+  const isAll = brand.name.toLowerCase() === "all";
+
+  const href = isAll
+    ? `/dashboard/${type}s`
+    : `/search?type=${type}&brand=${brand.name.toLowerCase()}`;
+
   return (
     <Link
-      href={`/search?brand=${brand.name.toLowerCase()}`}
-      className="flex flex-col items-center gap-2 min-w-[70px] group"
+      href={href}
+      className={clsx(
+        "flex flex-col items-center gap-2 min-w-[70px] group",
+        isSelected && "bg-blue-100 rounded-md py-1"
+      )}
     >
-      <div className="relative overflow-hidden transition-transform bg-black border-2 border-green-300 rounded-full shadow-md w-14 h-14 group-hover:scale-105">
+      <div className="relative overflow-hidden transition-transform border-2 border-green-300 rounded-full shadow-md w-14 h-14 group-hover:scale-105">
         <Image
-          src={brand.logo}
+          src={brand.logo || "/images/placeholder.jpg"}
           alt={brand.name}
           fill
           className="object-cover"

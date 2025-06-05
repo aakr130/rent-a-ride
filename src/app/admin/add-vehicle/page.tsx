@@ -69,7 +69,7 @@ export default function AddVehiclePage() {
 
     const data = await res.json();
     if (res.ok) {
-      toast.success("✅ Vehicle added successfully!");
+      toast.success("Vehicle added successfully!");
       setForm({
         name: "",
         images: [""],
@@ -83,7 +83,7 @@ export default function AddVehiclePage() {
         tags: [],
       });
     } else {
-      toast.error(data.error || "❌ Failed to add vehicle.");
+      toast.error(data.error || " Failed to add vehicle.");
     }
   };
 

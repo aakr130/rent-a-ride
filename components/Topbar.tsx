@@ -81,6 +81,15 @@ export default function Topbar() {
           } absolute top-16 left-0 w-full px-4 pb-4 bg-white shadow-md md:shadow-none md:static md:bg-transparent md:flex md:items-center md:justify-end md:space-x-6 md:pb-0 md:px-0`}
         >
           {/* Always visible links */}
+          {isLoggedIn && (
+            <Link
+              href="/dashboard/"
+              className="relative inline-block py-2 text-black transition duration-300 hover:text-red-400 group animated-underline md:py-0"
+            >
+              Home
+            </Link>
+          )}
+
           {["aboutus", "contactus"].map((path, i) => (
             <Link
               key={i}

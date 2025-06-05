@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -8,156 +8,163 @@ import {
   SlidersHorizontal,
   MoreVertical,
 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { Brand, Car } from "../../../types";
 import BrandFilter from "../../../components/BrandFilter";
 import CarCard from "../../../components/VehicleCard";
 import BottomNavigation from "../../../components/BottomNavigation";
+import Spinner from "@/app/icons/spinner";
 
 export default function SearchPage() {
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [vehicles, setVehicles] = useState<Car[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const brands: Brand[] = [
-    { id: 0, name: "ALL", logo: "https://placehold.co/60x60/222/fff?text=ALL" },
-    {
-      id: 1,
-      name: "Ferrari",
-      logo: "https://placehold.co/60x60/222/fff?text=F",
-    },
-    { id: 2, name: "Tesla", logo: "https://placehold.co/60x60/222/fff?text=T" },
-    { id: 3, name: "BMW", logo: "https://placehold.co/60x60/222/fff?text=B" },
-    {
-      id: 4,
-      name: "Lamborghini",
-      logo: "https://placehold.co/60x60/222/fff?text=L",
-    },
-  ];
+  const searchParams = useSearchParams();
+  const selectedBrand = searchParams?.get("brand");
+  const selectedType = searchParams?.get("type") || "car";
 
-  const recommendedCars: Car[] = [
-    {
-      id: 1,
-      name: "Tesla Model S",
-      images: ["https://placehold.co/600x400/222/fff?text=Tesla+Model+S"],
-      rating: 5.0,
-      location: "Chicago, USA",
-      price: 100,
-      hasBookNow: true,
-    },
-    {
-      id: 2,
-      name: "Ferrari LaFerrari",
-      images: ["https://placehold.co/600x400/222/fff?text=Ferrari+LaFerrari"],
-      rating: 5.0,
-      location: "Washington DC",
-      price: 100,
-      hasBookNow: true,
-    },
-    {
-      id: 3,
-      name: "Lamborghini Aventador",
-      images: [
-        "https://placehold.co/600x400/222/fff?text=Lamborghini+Aventador",
-      ],
-      rating: 4.9,
-      location: "Washington DC",
-      price: 100,
-      hasBookNow: true,
-    },
-    {
-      id: 4,
-      name: "BMW GT3 M2",
-      images: ["https://placehold.co/600x400/222/fff?text=BMW+GT3+M2"],
-      rating: 5.0,
-      location: "New York, USA",
-      price: 100,
-      hasBookNow: true,
-    },
-  ];
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/vehicles/all");
+        const data: Car[] = await res.json();
+        if (!Array.isArray(data)) return;
 
-  const popularCars: Car[] = [
-    {
-      id: 5,
-      name: "Ferrari LaFerrari",
-      images: [
-        "https://placehold.co/600x400/222/fff?text=Ferrari+LaFerrari+White",
-      ],
-      rating: 5.0,
-      price: 100,
-      hasBookNow: false,
-    },
-  ];
+        const filtered = data.filter((v) => v.type === selectedType);
+
+        const brandMap = new Map<string, Brand>();
+        filtered.forEach((item) => {
+          const raw = item.brand?.trim();
+          if (!raw) return;
+          const key = raw.toLowerCase();
+          if (!brandMap.has(key)) {
+            brandMap.set(key, {
+              id: brandMap.size + 1,
+              name: raw,
+              logo: item.images?.[0] || "/images/placeholder.jpg",
+            });
+          }
+        });
+
+        const allLogos: Record<string, string> = {
+          car: "/images/all-cars.jpg",
+          bike: "/images/all-bikes.jpg",
+          scooter: "/images/all-scooters.jpg",
+        };
+
+        const allBrandImage =
+          allLogos[selectedType] || "/images/placeholder.jpg";
+
+        const brandList = [
+          { id: 0, name: "ALL", logo: allBrandImage },
+          ...Array.from(brandMap.values()),
+        ];
+
+        setVehicles(filtered);
+        setBrands(brandList);
+      } catch (err) {
+        console.error("Error loading data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVehicles();
+  }, [selectedType]);
+
+  const filteredVehicles = vehicles.filter((item) => {
+    const brandMatch =
+      !selectedBrand || selectedBrand.toLowerCase() === "all"
+        ? true
+        : item.brand?.toLowerCase() === selectedBrand.toLowerCase();
+
+    const searchMatch = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    return brandMatch && searchMatch;
+  });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner className="w-8 h-8 text-gray-600" />
+      </div>
+    );
+  }
 
   return (
     <main className="flex flex-col min-h-screen pb-16 bg-white">
-      <div className="flex items-center justify-between p-4">
+      {/* Top Header */}
+      <div className="flex items-center justify-between p-4 mt-6">
         <div className="flex items-center gap-4">
           <Link href="/home">
             <ArrowLeft size={24} />
           </Link>
           <h1 className="text-xl font-bold">Search</h1>
         </div>
-
         <Link href="#">
           <MoreVertical size={24} />
         </Link>
       </div>
 
-      <div className="flex items-center gap-2 px-4 mb-6">
-        <div className="relative flex-1">
+      {/* Search Input */}
+      <div className="flex items-center gap-2 px-6 mb-4">
+        <div className="relative w-full">
           <input
             type="text"
-            placeholder="Search your dream car...."
-            className="pl-10 input-field"
+            placeholder="Search your vehicle..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-5 py-3 pl-12 text-sm border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <Search
-            className="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2"
-            size={20}
+            className="absolute text-gray-400 transform -translate-y-1/2 left-4 top-1/2"
+            size={18}
           />
         </div>
-
-        <Link href="/filters" className="p-3 bg-gray-100 rounded-lg">
-          <SlidersHorizontal size={20} />
-        </Link>
       </div>
 
-      <div className="px-4 mb-6 overflow-x-auto">
-        <div className="flex gap-2 pb-2">
+      {/* Brand Filters */}
+      <div className="px-4 mb-6 overflow-x-auto no-scrollbar">
+        <div className="flex gap-3 pb-2">
           {brands.map((brand) => (
-            <BrandFilter key={brand.id} brand={brand} />
+            <BrandFilter
+              key={brand.id}
+              brand={brand}
+              type={selectedType as any}
+            />
           ))}
         </div>
       </div>
 
-      <div className="px-4 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Recommend For You</h2>
-          <Link href="/recommended" className="text-sm text-gray-500">
-            View All
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {recommendedCars.map((car) => (
-            <CarCard key={car.id} vehicle={car} search />
-          ))}
-        </div>
-      </div>
-
+      {/* Vehicle Listings */}
       <div className="px-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">Our Popular Cars</h2>
-          <Link href="/popular" className="text-sm text-gray-500">
-            View All
-          </Link>
+          <h2 className="text-lg font-bold">
+            {selectedBrand ? selectedBrand.toUpperCase() : "ALL"}{" "}
+            {selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}s
+          </h2>
+          <p className="text-sm text-gray-500">
+            {filteredVehicles.length} found
+          </p>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {popularCars.map((car) => (
-            <CarCard key={car.id} vehicle={car} search />
-          ))}
-        </div>
+
+        {filteredVehicles.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {filteredVehicles.map((vehicle) => (
+              <CarCard key={vehicle.id} vehicle={vehicle} search />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No vehicles found for this brand.</p>
+        )}
       </div>
 
-      <BottomNavigation activeTab="search" />
+      {/* <BottomNavigation activeTab="search" /> */}
     </main>
   );
 }
