@@ -35,6 +35,12 @@ export default function AdminDashboard() {
       description: "View and manage registered users",
       href: "/admin/users",
     },
+
+    {
+      label: "👥 Manage Admins",
+      description: "Add and manage admins ",
+      href: "/admin/admins-list",
+    },
     {
       label: "📊 Reports",
       description: "View booking reports and statistics",
@@ -60,7 +66,7 @@ export default function AdminDashboard() {
             <button
               key={action.label}
               onClick={() => router.push(action.href)}
-              className="p-6 text-left transition bg-white border border-gray-200 shadow hover:shadow-lg rounded-xl hover:bg-gray-50"
+              className="p-6 text-left transition bg-white border border-gray-200 shadow cursor-pointer hover:shadow-lg rounded-xl hover:bg-gray-50"
             >
               <h2 className="mb-1 text-lg font-semibold">{action.label}</h2>
               <p className="text-sm text-gray-600">{action.description}</p>

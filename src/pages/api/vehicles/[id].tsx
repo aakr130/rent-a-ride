@@ -28,12 +28,38 @@ export default async function handler(
   }
 
   if (req.method === "PUT") {
-    const { name, price, rating, location, description } = req.body;
+    const {
+      name,
+      images,
+      price,
+      rating,
+      seats,
+      location,
+      description,
+      type,
+      tags,
+    } = req.body;
+
     try {
       await db.query(
-        `UPDATE vehicles SET name = $1, price = $2, rating = $3, location = $4, description = $5 WHERE id = $6`,
-        [name, price, rating, location, description, id]
+        `UPDATE vehicles
+       SET name = $1, images = $2, price = $3, rating = $4, seats = $5,
+           location = $6, description = $7, type = $8, tags = $9
+       WHERE id = $10`,
+        [
+          name,
+          images,
+          price,
+          rating,
+          seats,
+          location,
+          description,
+          type,
+          tags,
+          id,
+        ]
       );
+
       return res.status(200).json({ message: "Vehicle updated successfully." });
     } catch (error) {
       console.error("❌ PUT error:", error);

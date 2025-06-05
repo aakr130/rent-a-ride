@@ -81,7 +81,7 @@ export default function ManageVehiclesPage() {
                 onClick={() =>
                   router.push(`/admin/vehicle-list/edit/${vehicle.id}`)
                 }
-                className="px-3 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                className="px-3 py-1 text-sm text-white bg-blue-500 rounded cursor-pointer hover:bg-blue-600"
               >
                 Edit
               </button>

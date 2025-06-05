@@ -21,7 +21,6 @@ export default async function handler(
 
     const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
 
-    // 2. Extract and validate input
     const {
       name,
       images,
@@ -32,6 +31,7 @@ export default async function handler(
       description,
       type,
       tags = [],
+      brand,
     } = req.body;
 
     if (
@@ -42,7 +42,8 @@ export default async function handler(
       !seats ||
       !location ||
       !description ||
-      !type
+      !type ||
+      !brand
     ) {
       return res.status(400).json({ message: "Missing required fields" });
     }
@@ -50,8 +51,8 @@ export default async function handler(
     // 3. Insert into `vehicles` table (with array of images)
     await db.query(
       `INSERT INTO vehicles 
-      (name, images, price, rating, seats, location, description, type, tags, created_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())`,
+      (name, images, price, rating, seats, location, description, type, tags,brand, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW())`,
       [name, images, price, rating, seats, location, description, type, tags]
     );
 

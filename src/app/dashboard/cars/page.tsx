@@ -37,7 +37,7 @@ export default function CarDashboard() {
       } catch (error) {
         console.error("Error loading cars", error);
       } finally {
-        setTimeout(() => setLoading(false), 200); // ⏳ UX-friendly delay
+        setTimeout(() => setLoading(false), 200);
       }
     };
     fetchCars();

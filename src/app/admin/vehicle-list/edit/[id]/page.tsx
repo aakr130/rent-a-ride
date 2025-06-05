@@ -122,6 +122,20 @@ export default function EditVehiclePage() {
 
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">
+            Seat
+          </label>
+          <input
+            name="seats"
+            type="number"
+            value={vehicle.seats}
+            onChange={handleChange}
+            className="input"
+            placeholder="Seat"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-700">
             Rating
           </label>
           <input
@@ -148,9 +162,80 @@ export default function EditVehiclePage() {
           />
         </div>
 
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-700">
+            Image URLs
+          </label>
+          {vehicle.images?.map((img: string, idx: number) => (
+            <input
+              key={idx}
+              type="text"
+              value={img}
+              onChange={(e) => {
+                const updated = [...vehicle.images];
+                updated[idx] = e.target.value;
+                setVehicle({ ...vehicle, images: updated });
+              }}
+              className="input"
+              placeholder={`Image ${idx + 1}`}
+            />
+          ))}
+          <button
+            type="button"
+            onClick={() =>
+              setVehicle({
+                ...vehicle,
+                images: [...(vehicle.images || []), ""],
+              })
+            }
+            className="mt-2 text-sm text-blue-600 hover:underline"
+          >
+            + Add another image
+          </button>
+        </div>
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-700 ">
+            Vehicle Type
+          </label>
+          <select
+            name="type"
+            value={vehicle.type}
+            onChange={handleChange}
+            className="cursor-pointer input"
+          >
+            <option value="car">Car</option>
+            <option value="bike">Bike</option>
+            <option value="scooter">Scooter</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-700">
+            Tags
+          </label>
+          {["just-added", "top", "electric"].map((tag) => (
+            <label key={tag} className="block text-sm">
+              <input
+                type="checkbox"
+                name="tags"
+                value={tag}
+                checked={vehicle.tags?.includes(tag)}
+                onChange={() => {
+                  const nextTags = vehicle.tags || [];
+                  const updated = nextTags.includes(tag)
+                    ? nextTags.filter((t: any) => t !== tag)
+                    : [...nextTags, tag];
+                  setVehicle({ ...vehicle, tags: updated });
+                }}
+              />
+              <span className="ml-2 cursor-pointer">{tag}</span>
+            </label>
+          ))}
+        </div>
+
         <button
           type="submit"
-          className="w-full py-2 font-semibold text-white bg-blue-600 rounded hover:bg-blue-700"
+          className="w-full py-2 mb-6 font-semibold text-white bg-blue-600 rounded cursor-pointer hover:bg-blue-700"
         >
           Save Changes
         </button>

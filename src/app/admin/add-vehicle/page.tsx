@@ -17,6 +17,7 @@ export default function AddVehiclePage() {
     location: "",
     description: "",
     type: "car",
+    brand: "",
     tags: [] as string[],
   });
 
@@ -78,6 +79,7 @@ export default function AddVehiclePage() {
         location: "",
         description: "",
         type: "car",
+        brand: "",
         tags: [],
       });
     } else {
@@ -180,6 +182,15 @@ export default function AddVehiclePage() {
           <option value="bike">Bike</option>
           <option value="scooter">Scooter</option>
         </select>
+
+        <input
+          name="brand"
+          placeholder="Enter Brand (e.g., Tesla)"
+          value={form.brand}
+          onChange={handleChange}
+          className="input"
+          required
+        />
 
         {/* Tags checkbox layout */}
         <div className="flex flex-col gap-2">
