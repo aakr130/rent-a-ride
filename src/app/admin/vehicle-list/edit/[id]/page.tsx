@@ -232,6 +232,31 @@ export default function EditVehiclePage() {
             </label>
           ))}
         </div>
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-700">
+            Color
+          </label>
+          <input
+            name="color"
+            value={vehicle.color}
+            onChange={handleChange}
+            className="input"
+            placeholder="Color"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-700">
+            Fuel Type
+          </label>
+          <input
+            name="fuel_type"
+            value={vehicle.fuel_type}
+            onChange={handleChange}
+            className="input"
+            placeholder="Fuel Type"
+          />
+        </div>
 
         <button
           type="submit"

@@ -19,6 +19,8 @@ export default function AddVehiclePage() {
     type: "car",
     brand: "",
     tags: [] as string[],
+    color: "",
+    fuel_type: "",
   });
 
   const handleChange = (
@@ -81,6 +83,8 @@ export default function AddVehiclePage() {
         type: "car",
         brand: "",
         tags: [],
+        color: "",
+        fuel_type: "",
       });
     } else {
       toast.error(data.error || " Failed to add vehicle.");
@@ -172,6 +176,23 @@ export default function AddVehiclePage() {
           onChange={handleChange}
           required
         />
+        <input
+          name="color"
+          placeholder="Color (e.g., Red)"
+          className="input"
+          value={form.color}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="fuel_type"
+          placeholder="Fuel Type (e.g., Petrol)"
+          className="input"
+          value={form.fuel_type}
+          onChange={handleChange}
+          required
+        />
+
         <select
           name="type"
           value={form.type}

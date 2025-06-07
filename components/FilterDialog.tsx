@@ -20,7 +20,7 @@ export default function FilterDialog({ type }: FilterDialogProps) {
   const [options, setOptions] = useState({
     colors: [] as string[],
     fuelTypes: [] as string[],
-    rentalTimes: [] as string[],
+
     seats: [] as number[],
     locations: [] as string[],
   });
@@ -29,7 +29,6 @@ export default function FilterDialog({ type }: FilterDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const [priceRange, setPriceRange] = useState<[number, number]>([10, 230000]);
-  const [rentalTime, setRentalTime] = useState<string | null>(null);
   const [carLocation, setCarLocation] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [sittingCapacity, setSittingCapacity] = useState<number | null>(null);
@@ -50,7 +49,7 @@ export default function FilterDialog({ type }: FilterDialogProps) {
 
   const clearFilters = () => {
     setPriceRange([500, 10000]);
-    setRentalTime(null);
+
     setCarLocation("");
     setSelectedColor(null);
     setSittingCapacity(null);
@@ -61,7 +60,6 @@ export default function FilterDialog({ type }: FilterDialogProps) {
     const query = new URLSearchParams();
     query.set("type", type);
 
-    if (rentalTime) query.set("rental_time", rentalTime);
     if (sittingCapacity) query.set("seats", sittingCapacity.toString());
     if (fuelType) query.set("fuel_type", fuelType);
     if (carLocation) query.set("location", carLocation);
@@ -116,28 +114,6 @@ export default function FilterDialog({ type }: FilterDialogProps) {
             <div className="flex justify-between mt-1 text-sm">
               <span>Rs {priceRange[0]}</span>
               <span>Rs {priceRange[1]}+</span>
-            </div>
-          </div>
-
-          {/* Rental Time */}
-          <div>
-            <h2 className="mb-2 font-medium">Rental Time</h2>
-            <div className="flex flex-wrap gap-2">
-              {options.rentalTimes.map((time) => (
-                <button
-                  key={time}
-                  className={`px-4 cursor-pointer py-2 rounded-full text-sm ${
-                    rentalTime === time
-                      ? "bg-black text-white"
-                      : "bg-gray-100 text-black"
-                  }`}
-                  onClick={() =>
-                    setRentalTime(rentalTime === time ? null : time)
-                  }
-                >
-                  {time}
-                </button>
-              ))}
             </div>
           </div>
 

@@ -6,11 +6,11 @@ import FilterDialog from "./FilterDialog"; // adjust path if needed
 
 interface SearchboxProps {
   type: "car" | "bike" | "scooter";
+  value: string;
+  onChange: (value: string) => void;
 }
 
-const Searchbox = ({ type }: SearchboxProps) => {
-  const [searchQuery, setSearchQuery] = useState("");
-
+const Searchbox = ({ type, value, onChange }: SearchboxProps) => {
   return (
     <div className="flex items-center gap-3">
       <div className="relative w-full">
@@ -18,8 +18,8 @@ const Searchbox = ({ type }: SearchboxProps) => {
           type="text"
           placeholder="Search your vehicle..."
           className="w-full px-10 py-3 text-sm bg-white border rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
         />
         <Search
           size={18}
@@ -27,7 +27,6 @@ const Searchbox = ({ type }: SearchboxProps) => {
         />
       </div>
 
-      {/* 🔁 Replaced the Link with your dialog */}
       <FilterDialog type={type} />
     </div>
   );

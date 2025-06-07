@@ -22,6 +22,8 @@ type Bike = {
   type: string;
   brand: string;
   tags: string[];
+  fuel_type: string;
+  color: string;
 };
 
 export default function BikeDashboard() {
@@ -31,6 +33,8 @@ export default function BikeDashboard() {
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const selectedBrand = searchParams?.get("brand");
+  const [searchQuery, setSearchQuery] = useState("");
+  const tagFilter = searchParams?.get("tag");
 
   useEffect(() => {
     startTransition(() => {
@@ -75,8 +79,18 @@ export default function BikeDashboard() {
   };
 
   const filteredBikes = bikes.filter((bike) => {
-    if (!selectedBrand || selectedBrand.toLowerCase() === "all") return true;
-    return bike.brand?.toLowerCase() === selectedBrand.toLowerCase();
+    const matchesBrand =
+      !selectedBrand || selectedBrand.toLowerCase() === "all"
+        ? true
+        : bike.brand?.toLowerCase() === selectedBrand.toLowerCase();
+
+    const matchesSearch = bike.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const matchesTag = tagFilter ? bike.tags.includes(tagFilter) : true;
+
+    return matchesBrand && matchesSearch && matchesTag;
   });
 
   if (loading || isPending) {
@@ -90,7 +104,7 @@ export default function BikeDashboard() {
   return (
     <main className="min-h-screen px-6 pb-20 text-gray-900 pt-28 bg-gradient-to-b from-white via-slate-100 to-white">
       <div className="mb-8">
-        <Searchbox type="bike" />
+        <Searchbox type="bike" value={searchQuery} onChange={setSearchQuery} />
       </div>
 
       {/* 🏷️ Bike Brands */}
@@ -110,12 +124,14 @@ export default function BikeDashboard() {
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-semibold">🏍️ Top Rated Bikes</h2>
-            <Link
-              href="/bikes"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              View All
-            </Link>
+            {searchParams?.get("tag") !== "top" && (
+              <Link
+                href="/dashboard/bikes?tag=top"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                View All
+              </Link>
+            )}
           </div>
           <p className="mb-4 text-sm text-gray-500">
             High-performance machines for enthusiasts
@@ -139,12 +155,14 @@ export default function BikeDashboard() {
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-semibold">🆕 Just Added</h2>
-            <Link
-              href="/bikes?sort=new"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              View All
-            </Link>
+            {searchParams?.get("tag") !== "just-added" && (
+              <Link
+                href="/dashboard/bikes?tag=just-added"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                View All
+              </Link>
+            )}
           </div>
           <p className="mb-4 text-sm text-gray-500">
             Explore the newest two-wheelers
@@ -168,12 +186,14 @@ export default function BikeDashboard() {
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-semibold">⚡ Electric Bikes</h2>
-            <Link
-              href="/bikes?filter=electric"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              View All
-            </Link>
+            {searchParams?.get("tag") !== "electric" && (
+              <Link
+                href="/dashboard/bikes?tag=electric"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                View All
+              </Link>
+            )}
           </div>
           <p className="mb-4 text-sm text-gray-500">
             Eco-friendly and efficient rides

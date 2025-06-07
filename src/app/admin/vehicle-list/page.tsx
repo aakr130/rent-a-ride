@@ -34,10 +34,20 @@ export default function ManageVehiclesPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/vehicles/all")
+    fetch("/api/vehicles/admin-vehicle")
       .then((res) => res.json())
-      .then((data) => setVehicles(data))
-      .catch((err) => console.error("❌ Error loading vehicles:", err));
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setVehicles(data);
+        } else {
+          console.error("❌ Expected array but got:", data);
+          toast.error("Unexpected response. Could not load vehicles.");
+        }
+      })
+      .catch((err) => {
+        console.error("❌ Error loading vehicles:", err);
+        toast.error("Failed to fetch vehicle data.");
+      });
   }, []);
 
   const handleDelete = async (id: number | null) => {

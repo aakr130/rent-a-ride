@@ -38,14 +38,16 @@ export default async function handler(
       description,
       type,
       tags,
+      color,
+      fuel_type,
     } = req.body;
 
     try {
       await db.query(
         `UPDATE vehicles
        SET name = $1, images = $2, price = $3, rating = $4, seats = $5,
-           location = $6, description = $7, type = $8, tags = $9
-       WHERE id = $10`,
+           location = $6, description = $7, type = $8, tags = $9,   color = $10, fuel_type = $11
+       WHERE id = $12`,
         [
           name,
           images,
@@ -56,6 +58,8 @@ export default async function handler(
           description,
           type,
           tags,
+          color,
+          fuel_type,
           id,
         ]
       );

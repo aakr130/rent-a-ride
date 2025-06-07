@@ -22,6 +22,8 @@ type Car = {
   type: string;
   brand: string;
   tags: string[];
+  color: string;
+  fuel_type: string;
 };
 
 export default function CarDashboard() {
@@ -29,7 +31,11 @@ export default function CarDashboard() {
   const [loading, setLoading] = useState(true);
   const [brands, setBrands] = useState<Brand[]>([]);
   const searchParams = useSearchParams();
+
   const [isPending, startTransition] = useTransition();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const tagFilter = searchParams?.get("tag");
 
   useEffect(() => {
     startTransition(() => {
@@ -44,7 +50,7 @@ export default function CarDashboard() {
   async function fetchCars(): Promise<void> {
     try {
       const params = new URLSearchParams(searchParams?.toString());
-      params.set("type", "car"); // always enforce 'car'
+      params.set("type", "car");
 
       const res = await fetch(`/api/vehicles/all?${params.toString()}`);
       const data = await res.json();
@@ -52,7 +58,6 @@ export default function CarDashboard() {
       if (Array.isArray(data)) {
         setCars(data);
 
-        // Dynamically extract brand list with images
         const uniqueBrandsMap = new Map<string, Brand>();
         data.forEach((car) => {
           if (!uniqueBrandsMap.has(car.brand)) {
@@ -72,6 +77,13 @@ export default function CarDashboard() {
       setTimeout(() => setLoading(false), 200);
     }
   }
+  const filteredCars = cars.filter((car) => {
+    const matchesSearch = car.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesTag = tagFilter ? car.tags.includes(tagFilter) : true;
+    return matchesSearch && matchesTag;
+  });
 
   if (loading || isPending) {
     return (
@@ -84,7 +96,7 @@ export default function CarDashboard() {
   return (
     <main className="min-h-screen px-6 pb-20 text-gray-900 pt-28 bg-gradient-to-b from-white via-slate-100 to-white">
       <div className="mb-8">
-        <Searchbox type="car" />
+        <Searchbox type="car" value={searchQuery} onChange={setSearchQuery} />
       </div>
 
       <section className="mb-10">
@@ -98,16 +110,19 @@ export default function CarDashboard() {
 
       {/* 🚘 Top Picks */}
       {/* 🚘 Top Picks */}
-      {cars.some((car) => car.tags.includes("top")) && (
+
+      {filteredCars.some((car) => car.tags.includes("top")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-semibold">🚘 Top Rated Cars</h2>
-            <Link
-              href="/cars"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              View All
-            </Link>
+            {searchParams?.get("tag") !== "top" && (
+              <Link
+                href="/dashboard/cars?tag=top"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                View All
+              </Link>
+            )}
           </div>
           <p className="mb-4 text-sm text-gray-500">
             Hand-picked for performance and comfort
@@ -123,16 +138,18 @@ export default function CarDashboard() {
       )}
 
       {/* 🚀 Just Added */}
-      {cars.some((car) => car.tags.includes("just-added")) && (
+      {filteredCars.some((car) => car.tags.includes("just-added")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-semibold">🚀 Just Added</h2>
-            <Link
-              href="/cars?sort=new"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              View All
-            </Link>
+            {searchParams?.get("tag") !== "just-added" && (
+              <Link
+                href="/dashboard/cars?tag=just-added"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                View All
+              </Link>
+            )}
           </div>
           <p className="mb-4 text-sm text-gray-500">
             Explore the latest arrivals to our garage
@@ -148,16 +165,18 @@ export default function CarDashboard() {
       )}
 
       {/* 🔋 Electric Picks */}
-      {cars.some((car) => car.tags.includes("electric")) && (
+      {filteredCars.some((car) => car.tags.includes("electric")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-semibold">🔋 Electric Picks</h2>
-            <Link
-              href="/cars?filter=electric"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              View All
-            </Link>
+            {searchParams?.get("tag") !== "electric" && (
+              <Link
+                href="/dashboard/cars?tag=electric"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                View All
+              </Link>
+            )}
           </div>
           <p className="mb-4 text-sm text-gray-500">
             Zero-emission rides for the future

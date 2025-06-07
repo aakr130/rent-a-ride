@@ -18,6 +18,8 @@ export interface Car {
   tags: string[];
   hasBookNow?: boolean;
   description?: string;
+  fuel_type: string;
+  color: string;
 }
 
 export interface Feature {

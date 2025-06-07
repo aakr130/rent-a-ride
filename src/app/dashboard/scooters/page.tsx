@@ -22,6 +22,8 @@ type Scooter = {
   type: string;
   brand: string;
   tags: string[];
+  color: string;
+  fuel_type: string;
 };
 
 export default function ScooterDashboard() {
@@ -31,6 +33,8 @@ export default function ScooterDashboard() {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const selectedBrand = searchParams?.get("brand");
+  const [searchQuery, setSearchQuery] = useState("");
+  const tagFilter = searchParams?.get("tag");
 
   useEffect(() => {
     startTransition(() => {
@@ -75,8 +79,17 @@ export default function ScooterDashboard() {
   };
 
   const filteredScooters = scooters.filter((scooter) => {
-    if (!selectedBrand || selectedBrand.toLowerCase() === "all") return true;
-    return scooter.brand?.toLowerCase() === selectedBrand.toLowerCase();
+    const matchesBrand =
+      !selectedBrand || selectedBrand.toLowerCase() === "all"
+        ? true
+        : scooter.brand?.toLowerCase() === selectedBrand.toLowerCase();
+
+    const matchesSearch = scooter.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesTag = tagFilter ? scooter.tags.includes(tagFilter) : true;
+
+    return matchesBrand && matchesSearch && matchesTag;
   });
 
   if (loading) {
@@ -90,7 +103,11 @@ export default function ScooterDashboard() {
   return (
     <main className="min-h-screen px-6 pb-20 text-gray-900 pt-28 bg-gradient-to-b from-white via-slate-100 to-white">
       <div className="mb-8">
-        <Searchbox type="scooter" />
+        <Searchbox
+          value={searchQuery}
+          onChange={setSearchQuery}
+          type="scooter"
+        />
       </div>
 
       {/* Brands */}
@@ -110,12 +127,14 @@ export default function ScooterDashboard() {
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-semibold">🛵 Top Rated Scooters</h2>
-            <Link
-              href="/scooters"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              View All
-            </Link>
+            {searchParams?.get("tag") !== "top" && (
+              <Link
+                href="/dashboard/scooters?tag=top"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                View All
+              </Link>
+            )}
           </div>
           <p className="mb-4 text-sm text-gray-500">
             City rides that deliver smooth and smart performance
@@ -139,12 +158,14 @@ export default function ScooterDashboard() {
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-semibold">🆕 Just Added</h2>
-            <Link
-              href="/scooters?sort=new"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              View All
-            </Link>
+            {searchParams?.get("tag") !== "just-added" && (
+              <Link
+                href="/dashboard/scooters?tag=just-added"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                View All
+              </Link>
+            )}
           </div>
           <p className="mb-4 text-sm text-gray-500">
             Discover our newest smart commuters
@@ -167,12 +188,14 @@ export default function ScooterDashboard() {
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-semibold">⚡ Electric Picks</h2>
-            <Link
-              href="/scooters?filter=electric"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              View All
-            </Link>
+            {searchParams?.get("tag") !== "electric" && (
+              <Link
+                href="/dashboard/scooters?tag=electric"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                View All
+              </Link>
+            )}
           </div>
           <p className="mb-4 text-sm text-gray-500">
             Eco-friendly rides for your daily commute

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Heart } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Car } from "../types";
 
@@ -18,14 +19,17 @@ export default function VehicleCard({
   type = "car",
 }: VehicleCardProps) {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-
+  const router = useRouter();
   const detailLink = `/dashboard/${type}s/${vehicle.id}`;
 
   return (
-    <Link href={detailLink} className="block mb-1 font-medium hover:underline">
-      <div className="relative overflow-hidden cursor-pointer bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-[1.01]">
+    <div
+      className="block transition-transform duration-200 hover:scale-[1.01] cursor-pointer"
+      onClick={() => router.push(detailLink)}
+    >
+      <div className="overflow-hidden bg-white border shadow-sm rounded-xl hover:shadow-md">
         {/* Image */}
-        <div className="relative h-40">
+        <div className="relative w-full h-40">
           <Image
             src={vehicle.images?.[0] || "/images/placeholder.jpg"}
             alt={vehicle.name}
@@ -33,50 +37,59 @@ export default function VehicleCard({
             className="object-cover"
           />
           <button
-            className="absolute top-2 right-2 p-1.5 rounded-full bg-white shadow"
             onClick={(e) => {
-              e.preventDefault();
+              e.stopPropagation(); // 👈 prevent triggering router.push
               setIsFavorite(!isFavorite);
             }}
-            aria-label="Toggle Favorite"
+            className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow hover:scale-110 transition"
           >
-            <Heart size={16} fill={isFavorite ? "black" : "none"} />
+            <Heart size={16} fill={isFavorite ? "#111" : "none"} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-3">
-          {/* ✅ BRAND */}
-          {vehicle.brand && (
-            <p className="mb-1 text-xs font-semibold text-blue-600 uppercase">
-              {vehicle.brand}
-            </p>
-          )}
+        <div className="p-4 space-y-2">
+          <div className="text-xs font-semibold text-blue-600 uppercase">
+            {vehicle.brand}
+          </div>
+          <div className="text-sm font-medium text-gray-900 line-clamp-1">
+            {vehicle.name}
+          </div>
 
-          {/* Vehicle Name */}
-          <p className="text-sm font-medium text-gray-900">{vehicle.name}</p>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1 mb-1">
-            <span className="text-sm">{vehicle.rating}</span>
+          <div className="flex items-center gap-1 text-xs text-gray-500">
+            <span>{vehicle.rating}</span>
             <Image src="/images/star.png" alt="Rating" width={12} height={12} />
           </div>
 
-          {/* Location */}
           {vehicle.location && (
-            <div className="flex items-center gap-1 mb-2 text-xs text-gray-500">
+            <div className="flex items-center gap-1 text-xs text-gray-500">
               <Image
                 src="/images/location.jpg"
                 alt="Location"
                 width={12}
                 height={12}
               />
-              <span>{vehicle.location}</span>
+              <span className="truncate">{vehicle.location}</span>
             </div>
           )}
 
-          {/* Seats & Price */}
-          <div className="flex items-center justify-between mb-2 text-xs text-gray-500">
+          {/* Detailed Labels */}
+          <div className="flex flex-col gap-1 mt-2 text-xs text-gray-600">
+            {vehicle.fuel_type && (
+              <div className="flex items-center gap-2">
+                ⛽ <span className="font-medium">Fuel Type:</span>{" "}
+                {vehicle.fuel_type}
+              </div>
+            )}
+            {vehicle.color && (
+              <div className="flex items-center gap-2">
+                🎨 <span className="font-medium">Color:</span> {vehicle.color}
+              </div>
+            )}
+          </div>
+
+          {/* Seats and Price */}
+          <div className="flex items-center justify-between mt-3 text-xs text-gray-700">
             {vehicle.seats && (
               <div className="flex items-center gap-1">
                 <Image
@@ -88,27 +101,30 @@ export default function VehicleCard({
                 <span>{vehicle.seats} Seats</span>
               </div>
             )}
-            <div className="ml-auto font-medium text-right">
+            <div className="ml-auto font-semibold text-right">
               Rs.{vehicle.price}/Day
             </div>
           </div>
 
-          {/* Book Now (if search context) */}
+          {/* Search Context CTA */}
           {search && (
-            <div className="flex items-center justify-between mt-2">
-              <div className="font-medium">Rs.{vehicle.price}/Day</div>
-              {vehicle.hasBookNow && (
-                <Link
-                  href={detailLink}
-                  className="bg-black text-white text-xs px-3 py-1.5 rounded-full hover:bg-gray-800 transition"
-                >
-                  Book now
-                </Link>
-              )}
+            <div
+              className="flex items-center justify-between pt-2 mt-3 text-sm border-t"
+              onClick={(e) => e.stopPropagation()} // ❗ prevent navigation on Book Now click
+            >
+              <span className="font-medium text-gray-800">
+                Rs.{vehicle.price}/Day
+              </span>
+              <Link
+                href={detailLink}
+                className="px-3 py-1 text-xs text-white transition bg-black rounded-full hover:bg-gray-800"
+              >
+                Book now
+              </Link>
             </div>
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       "rwzhjmolzuih5lwk.public.blob.vercel-storage.com",
       "placehold.co",
       "img.freepik.com",
+      "imgs.search.brave.com",
     ],
   },
   remotePatterns: [

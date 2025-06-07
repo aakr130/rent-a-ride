@@ -10,7 +10,7 @@ export default async function handler(
     brand,
     color,
     fuel_type,
-    rental_time,
+
     seats,
     price_min,
     price_max,
@@ -39,11 +39,6 @@ export default async function handler(
     if (fuel_type) {
       values.push(fuel_type);
       conditions.push(`fuel_type = $${values.length}`);
-    }
-
-    if (rental_time) {
-      values.push(rental_time);
-      conditions.push(`rental_time_option = $${values.length}`);
     }
 
     if (seats) {
