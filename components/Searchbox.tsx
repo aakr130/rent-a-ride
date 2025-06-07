@@ -4,7 +4,11 @@ import { Search } from "lucide-react";
 import React, { useState } from "react";
 import FilterDialog from "./FilterDialog"; // adjust path if needed
 
-const Searchbox = () => {
+interface SearchboxProps {
+  type: "car" | "bike" | "scooter";
+}
+
+const Searchbox = ({ type }: SearchboxProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
@@ -24,7 +28,7 @@ const Searchbox = () => {
       </div>
 
       {/* 🔁 Replaced the Link with your dialog */}
-      <FilterDialog />
+      <FilterDialog type={type} />
     </div>
   );
 };

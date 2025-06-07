@@ -32,11 +32,13 @@ export default function ScooterDetailPage() {
   useEffect(() => {
     const fetchScooter = async () => {
       try {
-        const res = await fetch("/api/vehicles/all");
+        const res = await fetch("/api/vehicles/all?type=scooter");
         const data = await res.json();
 
         if (Array.isArray(data)) {
-          const found = data.find((v: Vehicle) => v.id === scooterId);
+          const found = data.find(
+            (v: Vehicle) => v.id === scooterId && v.type === "scooter"
+          );
           setScooter(found || null);
         }
       } catch (err) {

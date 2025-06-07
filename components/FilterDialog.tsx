@@ -12,7 +12,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Slider } from "@/components/ui/slider";
 
-export default function FilterDialog() {
+interface FilterDialogProps {
+  type: "car" | "bike" | "scooter";
+}
+
+export default function FilterDialog({ type }: FilterDialogProps) {
   const [options, setOptions] = useState({
     colors: [] as string[],
     fuelTypes: [] as string[],
@@ -21,10 +25,20 @@ export default function FilterDialog() {
     locations: [] as string[],
   });
 
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [priceRange, setPriceRange] = useState<[number, number]>([10, 230000]);
+  const [rentalTime, setRentalTime] = useState<string | null>(null);
+  const [carLocation, setCarLocation] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [sittingCapacity, setSittingCapacity] = useState<number | null>(null);
+  const [fuelType, setFuelType] = useState<string | null>(null);
+
   useEffect(() => {
     const loadOptions = async () => {
       try {
-        const res = await fetch("/api/vehicles/options");
+        const res = await fetch(`/api/vehicles/options?type=${type}`);
         const data = await res.json();
         setOptions(data);
       } catch (e) {
@@ -32,20 +46,10 @@ export default function FilterDialog() {
       }
     };
     loadOptions();
-  }, []);
-
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const [priceRange, setPriceRange] = useState<[number, number]>([10, 230]);
-  const [rentalTime, setRentalTime] = useState<string | null>(null);
-  const [carLocation, setCarLocation] = useState<string>("");
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [sittingCapacity, setSittingCapacity] = useState<number | null>(null);
-  const [fuelType, setFuelType] = useState<string | null>(null);
+  }, [type]);
 
   const clearFilters = () => {
-    setPriceRange([10, 230]);
+    setPriceRange([500, 10000]);
     setRentalTime(null);
     setCarLocation("");
     setSelectedColor(null);
@@ -55,6 +59,7 @@ export default function FilterDialog() {
 
   const applyFilters = () => {
     const query = new URLSearchParams();
+    query.set("type", type);
 
     if (rentalTime) query.set("rental_time", rentalTime);
     if (sittingCapacity) query.set("seats", sittingCapacity.toString());
@@ -64,7 +69,7 @@ export default function FilterDialog() {
     query.set("price_min", priceRange[0].toString());
     query.set("price_max", priceRange[1].toString());
 
-    router.push(`/dashboard/cars?${query.toString()}`);
+    router.push(`/dashboard/${type}s?${query.toString()}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     setIsOpen(false);
@@ -74,7 +79,7 @@ export default function FilterDialog() {
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
         <button
-          className="p-3 transition bg-gray-100 rounded-lg hover:bg-gray-200"
+          className="p-3 transition bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
           aria-label="Open filters"
         >
           <SlidersHorizontal size={20} />
@@ -106,11 +111,11 @@ export default function FilterDialog() {
               step={10}
               value={priceRange}
               onValueChange={(val) => setPriceRange(val as [number, number])}
-              className="w-full"
+              className="w-full cursor-pointer"
             />
             <div className="flex justify-between mt-1 text-sm">
-              <span>Rs{priceRange[0]}</span>
-              <span>Rs{priceRange[1]}+</span>
+              <span>Rs {priceRange[0]}</span>
+              <span>Rs {priceRange[1]}+</span>
             </div>
           </div>
 
@@ -121,7 +126,7 @@ export default function FilterDialog() {
               {options.rentalTimes.map((time) => (
                 <button
                   key={time}
-                  className={`px-4 py-2 rounded-full text-sm ${
+                  className={`px-4 cursor-pointer py-2 rounded-full text-sm ${
                     rentalTime === time
                       ? "bg-black text-white"
                       : "bg-gray-100 text-black"
@@ -143,7 +148,7 @@ export default function FilterDialog() {
               {options.locations.map((location) => (
                 <button
                   key={location}
-                  className={`px-4 py-2 rounded-full text-sm ${
+                  className={`px-4 py-2 cursor-pointer rounded-full text-sm ${
                     carLocation === location
                       ? "bg-black text-white"
                       : "bg-gray-100 text-black"
@@ -165,7 +170,7 @@ export default function FilterDialog() {
               {options.colors.map((color) => (
                 <button
                   key={color}
-                  className={`w-8 h-8 rounded-full border ${
+                  className={`w-8 h-8 cursor-pointer rounded-full border ${
                     color === "white"
                       ? "bg-white border-gray-300"
                       : `bg-${color}-500`
@@ -189,7 +194,7 @@ export default function FilterDialog() {
               {options.seats.map((c) => (
                 <button
                   key={c}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  className={`w-10 cursor-pointer h-10 rounded-full flex items-center justify-center ${
                     sittingCapacity === c
                       ? "bg-black text-white"
                       : "bg-gray-100 text-black"
@@ -211,7 +216,7 @@ export default function FilterDialog() {
               {options.fuelTypes.map((fuel) => (
                 <button
                   key={fuel}
-                  className={`px-4 py-2 rounded-full text-sm ${
+                  className={`px-4 py-2 cursor-pointer rounded-full text-sm ${
                     fuelType === fuel
                       ? "bg-black text-white"
                       : "bg-gray-100 text-black"

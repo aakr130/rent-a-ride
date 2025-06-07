@@ -32,11 +32,15 @@ export default function BikeDetailPage() {
   useEffect(() => {
     const fetchBike = async () => {
       try {
-        const res = await fetch("/api/vehicles/all");
+        const res = await fetch("/api/vehicles/all?type=bike");
+
         const data = await res.json();
 
         if (Array.isArray(data)) {
-          const found = data.find((v: Vehicle) => v.id === bikeId);
+          const found = data.find(
+            (v: Vehicle) => v.id === bikeId && v.type === "bike"
+          );
+
           setBike(found || null);
         }
       } catch (err) {

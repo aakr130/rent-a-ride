@@ -32,11 +32,13 @@ export default function CarDetailPage() {
   useEffect(() => {
     const fetchCar = async () => {
       try {
-        const res = await fetch("/api/vehicles/all");
+        const res = await fetch("/api/vehicles/all?type=car");
         const data = await res.json();
 
         if (Array.isArray(data)) {
-          const found = data.find((v: Vehicle) => v.id === carId);
+          const found = data.find(
+            (v: Vehicle) => v.id === carId && v.type === "car"
+          );
           setCar(found || null);
         }
       } catch (err) {

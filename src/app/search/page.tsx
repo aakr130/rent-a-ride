@@ -29,14 +29,15 @@ export default function SearchPage() {
     const fetchVehicles = async () => {
       try {
         setLoading(true);
-        const res = await fetch("/api/vehicles/all");
-        const data: Car[] = await res.json();
-        if (!Array.isArray(data)) return;
 
-        const filtered = data.filter((v) => v.type === selectedType);
+        // Always fetch ALL vehicles of the selected type
+        const res = await fetch(`/api/vehicles/all?type=${selectedType}`);
+        const allData: Car[] = await res.json();
+        if (!Array.isArray(allData)) return;
 
+        // Extract brand filters from ALL vehicles of that type
         const brandMap = new Map<string, Brand>();
-        filtered.forEach((item) => {
+        allData.forEach((item) => {
           const raw = item.brand?.trim();
           if (!raw) return;
           const key = raw.toLowerCase();
@@ -55,16 +56,23 @@ export default function SearchPage() {
           scooter: "/images/all-scooters.jpg",
         };
 
-        const allBrandImage =
-          allLogos[selectedType] || "/images/placeholder.jpg";
-
         const brandList = [
-          { id: 0, name: "ALL", logo: allBrandImage },
+          {
+            id: 0,
+            name: "ALL",
+            logo: allLogos[selectedType] || "/images/placeholder.jpg",
+          },
           ...Array.from(brandMap.values()),
         ];
 
-        setVehicles(filtered);
         setBrands(brandList);
+
+        // Now fetch filtered data using full query string
+        const filteredRes = await fetch(
+          `/api/vehicles/all?${searchParams?.toString()}`
+        );
+        const filteredData: Car[] = await filteredRes.json();
+        setVehicles(filteredData);
       } catch (err) {
         console.error("Error loading data", err);
       } finally {
@@ -73,7 +81,7 @@ export default function SearchPage() {
     };
 
     fetchVehicles();
-  }, [selectedType]);
+  }, [searchParams]);
 
   const filteredVehicles = vehicles.filter((item) => {
     const brandMatch =
@@ -112,7 +120,7 @@ export default function SearchPage() {
       </div>
 
       {/* Search Input */}
-      <div className="flex items-center gap-2 px-6 mb-4">
+      <div className="flex items-center gap-2 px-6 pt-8 mb-8">
         <div className="relative w-full">
           <input
             type="text"

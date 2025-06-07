@@ -84,7 +84,7 @@ export default function CarDashboard() {
   return (
     <main className="min-h-screen px-6 pb-20 text-gray-900 pt-28 bg-gradient-to-b from-white via-slate-100 to-white">
       <div className="mb-8">
-        <Searchbox />
+        <Searchbox type="car" />
       </div>
 
       <section className="mb-10">

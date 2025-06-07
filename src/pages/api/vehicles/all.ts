@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const {
-    type = "car",
+    type,
     brand,
     color,
     fuel_type,
@@ -17,6 +17,10 @@ export default async function handler(
     location, // 👈 added
   } = req.query;
 
+  if (!type) {
+    return res.status(400).json({ error: "Vehicle type is required" });
+  }
+
   try {
     let baseQuery = `SELECT * FROM vehicles WHERE type = $1`;
     const conditions: string[] = [];
@@ -24,7 +28,7 @@ export default async function handler(
 
     if (brand) {
       values.push(brand);
-      conditions.push(`brand = $${values.length}`);
+      conditions.push(`LOWER(brand) = LOWER($${values.length})`);
     }
 
     if (color) {
