@@ -5,8 +5,66 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const {
+    type = "car",
+    brand,
+    color,
+    fuel_type,
+    rental_time,
+    seats,
+    price_min,
+    price_max,
+    location, // 👈 added
+  } = req.query;
+
   try {
-    const result = await db.query(`SELECT * FROM vehicles`);
+    let baseQuery = `SELECT * FROM vehicles WHERE type = $1`;
+    const conditions: string[] = [];
+    const values: any[] = [type];
+
+    if (brand) {
+      values.push(brand);
+      conditions.push(`brand = $${values.length}`);
+    }
+
+    if (color) {
+      values.push(color);
+      conditions.push(`color = $${values.length}`);
+    }
+
+    if (fuel_type) {
+      values.push(fuel_type);
+      conditions.push(`fuel_type = $${values.length}`);
+    }
+
+    if (rental_time) {
+      values.push(rental_time);
+      conditions.push(`rental_time_option = $${values.length}`);
+    }
+
+    if (seats) {
+      values.push(Number(seats));
+      conditions.push(`seats = $${values.length}`);
+    }
+
+    if (price_min && price_max) {
+      values.push(Number(price_min));
+      conditions.push(`price >= $${values.length}`);
+
+      values.push(Number(price_max));
+      conditions.push(`price <= $${values.length}`);
+    }
+
+    if (location) {
+      values.push(location);
+      conditions.push(`LOWER(location) = LOWER($${values.length})`); // ✅ case-insensitive match
+    }
+
+    if (conditions.length > 0) {
+      baseQuery += ` AND ` + conditions.join(" AND ");
+    }
+
+    const result = await db.query(baseQuery, values);
     res.status(200).json(result.rows);
   } catch (error) {
     console.error("🔥 Fetch all vehicles error:", error);

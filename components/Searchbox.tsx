@@ -1,8 +1,8 @@
 "use client";
 
-import { Search, SlidersHorizontal } from "lucide-react";
-import Link from "next/link";
+import { Search } from "lucide-react";
 import React, { useState } from "react";
+import FilterDialog from "./FilterDialog"; // adjust path if needed
 
 const Searchbox = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,12 +23,8 @@ const Searchbox = () => {
         />
       </div>
 
-      <Link
-        href="/filters"
-        className="p-3 transition bg-gray-100 rounded-lg hover:bg-gray-200"
-      >
-        <SlidersHorizontal size={20} />
-      </Link>
+      {/* 🔁 Replaced the Link with your dialog */}
+      <FilterDialog />
     </div>
   );
 };

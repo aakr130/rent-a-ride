@@ -35,7 +35,11 @@ export default function BikeDashboard() {
   useEffect(() => {
     const fetchBikes = async () => {
       try {
-        const res = await fetch("/api/vehicles/all");
+        const params = new URLSearchParams(searchParams?.toString());
+        params.set("type", "bike");
+
+        const res = await fetch(`/api/vehicles/all?${params.toString()}`);
+
         const data = await res.json();
 
         if (Array.isArray(data)) {
