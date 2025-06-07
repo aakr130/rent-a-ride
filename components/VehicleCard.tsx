@@ -38,12 +38,12 @@ export default function VehicleCard({
           />
           <button
             onClick={(e) => {
-              e.stopPropagation(); // 👈 prevent triggering router.push
+              e.stopPropagation();
               setIsFavorite(!isFavorite);
             }}
-            className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow hover:scale-110 transition"
+            className="absolute top-2 right-2 bg-white rounded-full cursor-pointer p-1.5 shadow hover:scale-110 transition"
           >
-            <Heart size={16} fill={isFavorite ? "#111" : "none"} />
+            <Heart size={16} fill={isFavorite ? "#FF0000" : "none"} />
           </button>
         </div>
 
