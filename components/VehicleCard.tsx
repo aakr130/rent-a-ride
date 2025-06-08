@@ -6,6 +6,7 @@ import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Car } from "../types";
+import { useWishlist } from "@/context/WishlistContext";
 
 interface VehicleCardProps {
   vehicle: Car;
@@ -18,9 +19,10 @@ export default function VehicleCard({
   search = false,
   type = "car",
 }: VehicleCardProps) {
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const router = useRouter();
   const detailLink = `/dashboard/${type}s/${vehicle.id}`;
+  const { toggleItem, isWishlisted } = useWishlist();
+  const isFavorite = isWishlisted(vehicle.id);
 
   return (
     <div
@@ -39,7 +41,7 @@ export default function VehicleCard({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setIsFavorite(!isFavorite);
+              toggleItem(vehicle);
             }}
             className="absolute top-2 right-2 bg-white rounded-full cursor-pointer p-1.5 shadow hover:scale-110 transition"
           >

@@ -7,6 +7,7 @@ import Topbar from "../../components/Topbar";
 import { Toaster } from "react-hot-toast";
 import { QueryProvider } from "./providers/QueryProvider";
 import { usePathname } from "next/navigation";
+import { WishlistProvider } from "@/context/WishlistContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +33,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
-          {!isAdminRoute && <Topbar />}
-          {children}
-          <Toaster position="top-right" />
+          <WishlistProvider>
+            {!isAdminRoute && <Topbar />}
+            {children}
+            <Toaster position="top-right" />
+          </WishlistProvider>
         </QueryProvider>
       </body>
     </html>

@@ -27,6 +27,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import WishlistDrawer from "@/components/ui/wishlistDrawer";
 
 export default function Topbar() {
   const { data, isLoading } = useUser();
@@ -102,15 +103,7 @@ export default function Topbar() {
             </Link>
           ))}
 
-          {isLoggedIn && (
-            <Link
-              href="/wishlist"
-              className="relative inline-flex items-center py-2 text-black transition duration-300 hover:text-red-400 group md:py-0"
-              title="My Wishlist"
-            >
-              <Heart className="w-5 h-5 mr-1 text-red-500" />
-            </Link>
-          )}
+          {isLoggedIn && <WishlistDrawer />}
 
           {/* Conditional: show when NOT logged in */}
           {isLoading ? (
