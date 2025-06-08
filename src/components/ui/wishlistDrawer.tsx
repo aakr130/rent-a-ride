@@ -17,10 +17,10 @@ export default function WishlistDrawer() {
   return (
     <Sheet>
       <SheetTrigger className="relative inline-flex items-center py-2 text-black transition duration-300 hover:text-red-400 group md:py-0">
-        <Heart className="w-5 h-5 text-red-500 cursor-pointer" />
+        <Heart className="text-red-500 cursor-pointer w-7 h-7" />
         <span className="sr-only">Wishlist</span>
         {wishlist.length > 0 && (
-          <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full">
+          <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full cursor-pointer">
             {wishlist.length}
           </span>
         )}
@@ -35,7 +35,7 @@ export default function WishlistDrawer() {
             <span>My Wishlist</span>
             {wishlist.length > 0 && (
               <button
-                className="flex items-center text-xs font-medium text-red-600 hover:underline"
+                className="flex items-center mt-10 text-xs font-medium text-red-600 hover:underline"
                 onClick={() => {
                   clearWishlist();
                 }}
