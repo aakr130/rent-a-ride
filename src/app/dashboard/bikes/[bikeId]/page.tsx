@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import Spinner from "@/app/icons/spinner";
+import BookNowDialog from "../../../../../components/BookNowDialog";
 
 type Vehicle = {
   id: number;
@@ -130,9 +131,7 @@ export default function BikeDetailPage() {
 
         <p className="text-gray-600">{bike.description}</p>
 
-        <button className="w-full py-2 mt-4 font-semibold text-white transition bg-blue-600 rounded hover:bg-blue-700">
-          Book Now
-        </button>
+        <BookNowDialog vehicle={bike} />
       </div>
     </main>
   );

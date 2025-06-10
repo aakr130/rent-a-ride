@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, Heart, Menu, UserRoundCog, X } from "lucide-react";
+import { Bell, Heart, Menu, ShoppingBag, UserRoundCog, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import "./topbar.css";
@@ -161,6 +161,14 @@ export default function Topbar() {
                   >
                     <User size={16} />
                     {user?.name}
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
+                    onClick={() => (window.location.href = "/my-booking")}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-yellow-100"
+                  >
+                    <ShoppingBag size={16} />
+                    My bookings
                   </DropdownMenuItem>
 
                   <DropdownMenuItem

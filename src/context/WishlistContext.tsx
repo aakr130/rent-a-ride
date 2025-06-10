@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { Car } from "../../types";
+import { useUser } from "@/app/hooks/useUser";
 
 export interface WishlistContextType {
   items: Car[];
@@ -18,11 +19,16 @@ const WishlistContext = createContext<WishlistContextType | undefined>(
 
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<Car[]>([]);
+  const { data: user, isLoading, isError } = useUser();
 
   useEffect(() => {
+    if (isLoading || !user) return;
+
     const fetchWishlist = async () => {
       try {
-        const res = await fetch("/api/wishlist");
+        const res = await fetch("/api/wishlist", {
+          credentials: "include",
+        });
         if (!res.ok) throw new Error("Failed to load wishlist");
         const data: Car[] = await res.json();
         setItems(data);
@@ -32,7 +38,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     };
 
     fetchWishlist();
-  }, []);
+  }, [user, isLoading]);
 
   const syncToBackend = async (car: Car) => {
     try {
@@ -48,8 +54,9 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
 
   const addToWishlist = (item: Car) => {
     setItems((prev) => {
-      if (prev.some((v) => v.id === item.id)) return prev;
-      const updated = [...prev, item];
+      const map = new Map(prev.map((v) => [v.id, v]));
+      map.set(item.id, item);
+      const updated = [...map.values()];
       syncToBackend(item);
       return updated;
     });
