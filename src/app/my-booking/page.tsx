@@ -3,9 +3,20 @@
 import { useEffect, useState } from "react";
 import Spinner from "@/app/icons/spinner";
 import toast from "react-hot-toast";
+import Link from "next/link";
+
+const getRouteSegment = (type: string) => {
+  const t = type?.toLowerCase();
+  if (t.includes("car")) return "cars";
+  if (t.includes("bike")) return "bikes";
+  if (t.includes("scooter")) return "scooters";
+  return "cars"; // fallback
+};
 
 type Booking = {
   id: number;
+  vehicle_id: string;
+  vehicle_type: "cars" | "bikes" | "scooter";
   vehicle_name: string;
   image_url?: string;
   start_date: string;
@@ -56,17 +67,28 @@ export default function MyBookingsPage() {
             >
               <div className="flex items-start gap-4">
                 {booking.image_url && (
-                  <img
-                    src={booking.image_url}
-                    alt={booking.vehicle_name}
-                    className="object-cover w-20 h-20 rounded-lg"
-                  />
+                  <Link
+                    href={`/dashboard/${getRouteSegment(
+                      booking.vehicle_type
+                    )}/${booking.vehicle_id}`}
+                  >
+                    <img
+                      src={booking.image_url}
+                      alt={booking.vehicle_name}
+                      className="object-cover w-20 h-20 rounded-lg cursor-pointer hover:opacity-90"
+                    />
+                  </Link>
                 )}
 
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800">
+                  <Link
+                    href={`/dashboard/${getRouteSegment(
+                      booking.vehicle_type
+                    )}/${booking.vehicle_id}`}
+                  >
                     {booking.vehicle_name}
-                  </h2>
+                  </Link>
+
                   <p className="text-sm text-gray-600">
                     {new Date(booking.start_date).toLocaleDateString()} →{" "}
                     {new Date(booking.end_date).toLocaleDateString()}
@@ -91,7 +113,7 @@ export default function MyBookingsPage() {
                       ? "bg-green-100 text-green-700"
                       : (booking.status || "Pending") === "Completed"
                       ? "bg-blue-100 text-blue-700"
-                      : "bg-yellow-100 text-yellow-700"
+                      : "bg-red-100 text-yellow-700"
                   }`}
                 >
                   {booking.status || "Pending"}

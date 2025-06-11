@@ -56,7 +56,7 @@ export default async function handler(
 
     if (location) {
       values.push(location);
-      conditions.push(`LOWER(location) = LOWER($${values.length})`); // ✅ case-insensitive match
+      conditions.push(`LOWER(location) = LOWER($${values.length})`);
     }
 
     if (conditions.length > 0) {

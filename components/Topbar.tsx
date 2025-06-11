@@ -141,7 +141,7 @@ export default function Topbar() {
                       alt="User Avatar"
                       width={40}
                       height={40}
-                      className="object-cover w-10 h-10 rounded-full ring-2 ring-gray-300 hover:ring-yellow-400"
+                      className="object-cover w-10 h-10 rounded-full cursor-pointer ring-2 ring-gray-300 hover:ring-yellow-400"
                     />
                   ) : (
                     <div className="flex items-center justify-center w-10 h-10 text-sm font-bold text-white bg-yellow-500 rounded-full">

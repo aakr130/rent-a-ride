@@ -70,13 +70,14 @@ export default async function handler(
   if (req.method === "GET") {
     const result = await db.query(
       `SELECT 
-     b.*, 
-     v.name AS vehicle_name, 
-     v.images[1] AS image_url  -- PostgreSQL arrays are 1-indexed
-   FROM bookings b
-   JOIN vehicles v ON b.vehicle_id = v.id
-   WHERE b.user_id = $1
-   ORDER BY b.start_date DESC`,
+       b.*, 
+       v.name AS vehicle_name, 
+       v.images[1] AS image_url,
+       v.type AS vehicle_type  -- ✅ This line ensures the correct type is passed
+     FROM bookings b
+     JOIN vehicles v ON b.vehicle_id = v.id
+     WHERE b.user_id = $1
+     ORDER BY b.start_date DESC`,
       [user.id]
     );
 

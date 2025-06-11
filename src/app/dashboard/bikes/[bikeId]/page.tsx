@@ -100,16 +100,18 @@ export default function BikeDetailPage() {
 
       {/* Gallery */}
       <div className="flex gap-4 pb-2 mb-6 overflow-x-auto">
-        {bike.images?.map((img: string, idx: number) => (
-          <Image
-            key={idx}
-            src={img}
-            alt={`Gallery ${idx + 1}`}
-            width={140}
-            height={90}
-            className="object-cover rounded-lg shadow"
-          />
-        ))}
+        {bike.images
+          ?.filter((img) => !!img)
+          .map((img: string, idx: number) => (
+            <Image
+              key={idx}
+              src={img}
+              alt={`Gallery ${idx + 1}`}
+              width={140}
+              height={90}
+              className="object-cover rounded-lg shadow"
+            />
+          ))}
       </div>
 
       {/* Info Card */}

@@ -42,9 +42,9 @@ export default function AdminDashboard() {
       href: "/admin/admins-list",
     },
     {
-      label: "📊 Reports",
-      description: "View booking reports and statistics",
-      href: "/admin/reports",
+      label: "📊 Manage booking",
+      description: "View and manage bookings",
+      href: "/admin/booking",
     },
   ];
 
