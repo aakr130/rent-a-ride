@@ -1,3 +1,4 @@
+"use client";
 import jwt from "jsonwebtoken";
 
 import Image from "next/image";
@@ -6,9 +7,29 @@ import { cookies } from "next/headers";
 
 import { redirect } from "next/navigation";
 import { requireAuth } from "@/lib/auth";
+import { useEffect, useState } from "react";
+import EditProfileDialog from "../../../components/EditProfileDialog";
 
 export default function DashboardMain() {
   requireAuth();
+  const [showDialog, setShowDialog] = useState(false);
+
+  useEffect(() => {
+    async function checkIfNew() {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (data?.user?.is_new_user) {
+          setShowDialog(true);
+        }
+      } catch (err) {
+        console.error("Failed to check new user status", err);
+      }
+    }
+
+    checkIfNew();
+  }, []);
+
   return (
     <main className="flex flex-col items-center min-h-screen px-6 py-10 text-gray-900 pt-28 bg-gradient-to-b from-white via-slate-100 to-white">
       <div className="w-full max-w-6xl mb-10 text-center">
@@ -82,6 +103,9 @@ export default function DashboardMain() {
           </div>
         </Link>
       </div>
+      {showDialog && (
+        <EditProfileDialog open={showDialog} onOpenChange={setShowDialog} />
+      )}
     </main>
   );
 }

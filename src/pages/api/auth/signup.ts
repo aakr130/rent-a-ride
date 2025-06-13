@@ -33,7 +33,7 @@ export default async function handler(
     }
 
     await db.query(
-      "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)",
+      "INSERT INTO users (name, email, password,is_new_user) VALUES ($1, $2, $3,true)",
       [fullName.trim(), email.trim(), password.trim()]
     );
 

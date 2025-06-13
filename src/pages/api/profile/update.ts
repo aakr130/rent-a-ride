@@ -19,7 +19,15 @@ export default async function handler(
     }
 
     const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
-    const { name, email, profile_image_url, password } = req.body;
+    const {
+      name,
+      email,
+      profile_image_url,
+      password,
+      phone_number,
+      address,
+      license_card_url,
+    } = req.body;
 
     if (!name || !email) {
       return res.status(400).json({ message: "Name and email are required" });
@@ -28,9 +36,17 @@ export default async function handler(
     // Always update name, email, image
     await db.query(
       `UPDATE users 
-       SET name = $1, email = $2, profile_image_url = $3, updated_at = NOW()
-       WHERE id = $4`,
-      [name.trim(), email.trim(), profile_image_url, decoded.id]
+       SET name = $1, email = $2, profile_image_url = $3,phone_number = $4, address = $5, license_card_url = $6, updated_at = NOW()
+       WHERE id = $7`,
+      [
+        name.trim(),
+        email.trim(),
+        profile_image_url,
+        phone_number,
+        address,
+        license_card_url,
+        decoded.id,
+      ]
     );
 
     // Update password if provided (and not blank)
