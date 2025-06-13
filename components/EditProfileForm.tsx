@@ -19,6 +19,9 @@ type ProfileFormData = {
 };
 
 export default function EditProfileForm({ onDone }: { onDone: () => void }) {
+  const [licenseCardPreview, setLicenseCardPreview] = useState("");
+  const [licenseStatus, setLicenseStatus] = useState("");
+
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -53,6 +56,19 @@ export default function EditProfileForm({ onDone }: { onDone: () => void }) {
           if (data.user.profile_image_url) {
             setPreviewUrl(data.user.profile_image_url);
             setOriginalImageUrl(data.user.profile_image_url);
+          }
+          if (data.user.phone_number) {
+            setValue("phone_number", data.user.phone_number);
+          }
+          if (data.user.address) {
+            setValue("address", data.user.address);
+          }
+          if (data.user.license_card_url) {
+            setLicenseCardPreview(data.user.license_card_url);
+          }
+
+          if (data.user.license_status) {
+            setLicenseStatus(data.user.license_status);
           }
         }
         setUserLoaded(true);
@@ -250,12 +266,54 @@ export default function EditProfileForm({ onDone }: { onDone: () => void }) {
                 }
                 className="px-4 py-1.5 text-sm font-medium text-white bg-gray-700 rounded hover:bg-gray-800"
               >
-                Upload License Card
+                {licenseCardPreview || watchFields[2]?.[0]
+                  ? "Change License Card"
+                  : "Upload License Card"}
               </button>
+
+              {watchFields[2]?.[0] ? (
+                watchFields[2][0].type.startsWith("image/") && (
+                  <div className="w-full mt-2 overflow-hidden border rounded-md">
+                    <Image
+                      src={URL.createObjectURL(watchFields[2][0])}
+                      alt="License Preview"
+                      width={400}
+                      height={250}
+                      className="object-cover w-full h-auto rounded-md"
+                    />
+                  </div>
+                )
+              ) : licenseCardPreview ? (
+                <div className="w-full mt-2 overflow-hidden border rounded-md">
+                  <Image
+                    src={licenseCardPreview}
+                    alt="License Preview"
+                    width={400}
+                    height={250}
+                    className="object-cover w-full h-auto rounded-md"
+                  />
+                </div>
+              ) : null}
             </>
           )}
         />
       </div>
+      {licenseCardPreview && (
+        <p className="text-sm text-gray-700">
+          License Status:{" "}
+          <span
+            className={
+              licenseStatus === "approved"
+                ? "text-green-600"
+                : licenseStatus === "rejected"
+                ? "text-red-600"
+                : "text-yellow-600"
+            }
+          >
+            {licenseStatus}
+          </span>
+        </p>
+      )}
 
       <input
         type="password"

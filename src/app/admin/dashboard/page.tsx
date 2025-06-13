@@ -46,6 +46,12 @@ export default function AdminDashboard() {
       description: "View and manage bookings",
       href: "/admin/booking",
     },
+
+    {
+      label: "📊 Verify License ",
+      description: "View and verify License",
+      href: "/admin/verify-license",
+    },
   ];
 
   return (

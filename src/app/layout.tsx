@@ -1,11 +1,7 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Topbar from "../../components/Topbar";
-import { Toaster } from "react-hot-toast";
-import { QueryProvider } from "./providers/QueryProvider";
-import { usePathname } from "next/navigation";
-import { WishlistProvider } from "@/context/WishlistContext";
+import { AppShell } from "../../components/AppShell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,26 +13,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const metadata: Metadata = {
+  title: "Rent-a-Ride",
+  description: "Your next ride is one click away.",
+};
+
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith("/admin");
-
+}) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryProvider>
-          <WishlistProvider>
-            {!isAdminRoute && <Topbar />}
-            {children}
-            <Toaster position="top-right" />
-          </WishlistProvider>
-        </QueryProvider>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

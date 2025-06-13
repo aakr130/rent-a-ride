@@ -108,11 +108,10 @@ export default function VehicleCard({
             </div>
           </div>
 
-          {/* Search Context CTA */}
-          {search && (
+          {/* {search && (
             <div
               className="flex items-center justify-between pt-2 mt-3 text-sm border-t"
-              onClick={(e) => e.stopPropagation()} // ❗ prevent navigation on Book Now click
+              onClick={(e) => e.stopPropagation()}
             >
               <span className="font-medium text-gray-800">
                 Rs.{vehicle.price}/Day
@@ -124,7 +123,7 @@ export default function VehicleCard({
                 Book now
               </Link>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

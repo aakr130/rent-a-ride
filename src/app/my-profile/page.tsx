@@ -70,25 +70,50 @@ export default function MyProfilePage() {
 
       <div className="w-full px-6 py-4 mb-8 border border-blue-100 bg-blue-50 rounded-xl">
         <div className="grid gap-4 text-sm text-gray-800">
-          <div className="flex items-center justify-between">
-            <span className="font-medium text-blue-800">👤 Name</span>
-            <span>{user.name}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="font-medium text-blue-800">📧 Email</span>
-            <span>{user.email}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="font-medium text-blue-800">🖼️ Avatar</span>
-            <a
-              href={user.profile_image_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline max-w-[160px] truncate text-right"
-            >
-              View Image
-            </a>
-          </div>
+          <Item label="👤 Name" value={user.name} />
+          <Item label="📧 Email" value={user.email} />
+          <Item label="📱 Phone" value={user.phone_number || "Not provided"} />
+          <Item label="📍 Address" value={user.address || "Not provided"} />
+          <Item
+            label="🖼️ Avatar"
+            value={
+              <a
+                href={user.profile_image_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline max-w-[160px] truncate text-right"
+              >
+                View Image
+              </a>
+            }
+          />
+          <Item
+            label="🪪 License"
+            value={
+              user.license_card_url ? (
+                <a
+                  href={user.license_card_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline max-w-[160px] truncate text-right"
+                >
+                  View License
+                </a>
+              ) : (
+                <span className="text-gray-400">Not uploaded</span>
+              )
+            }
+          />
+          <Item
+            label="✅ License Status"
+            value={
+              user.license_status === "approved"
+                ? "✅ Approved"
+                : user.license_status === "rejected"
+                ? "❌ Rejected"
+                : "⏳ Pending"
+            }
+          />
         </div>
       </div>
 
@@ -112,5 +137,14 @@ export default function MyProfilePage() {
         </button>
       </div>
     </main>
+  );
+}
+
+function Item({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="font-medium text-blue-800">{label}</span>
+      <span className="text-right">{value}</span>
+    </div>
   );
 }

@@ -38,7 +38,7 @@ export default async function handler(
     }
 
     const userResult = await db.query(
-      "SELECT id, name, email, profile_image_url,is_new_user FROM users WHERE id = $1",
+      "SELECT id, name, email, profile_image_url, phone_number, address, license_card_url,license_status,is_new_user FROM users WHERE id = $1",
       [decoded.id]
     );
     const user = userResult.rows[0];

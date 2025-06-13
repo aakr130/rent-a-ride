@@ -36,7 +36,7 @@ export default async function handler(
     // Always update name, email, image
     await db.query(
       `UPDATE users 
-       SET name = $1, email = $2, profile_image_url = $3,phone_number = $4, address = $5, license_card_url = $6, updated_at = NOW()
+       SET name = $1, email = $2, profile_image_url = $3,phone_number = $4, address = $5, license_card_url = $6, is_new_user = FALSE, updated_at = NOW()
        WHERE id = $7`,
       [
         name.trim(),

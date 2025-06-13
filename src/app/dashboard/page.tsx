@@ -6,12 +6,10 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 
 import { redirect } from "next/navigation";
-import { requireAuth } from "@/lib/auth";
 import { useEffect, useState } from "react";
 import EditProfileDialog from "../../../components/EditProfileDialog";
 
 export default function DashboardMain() {
-  requireAuth();
   const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {

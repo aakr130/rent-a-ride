@@ -28,8 +28,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import WishlistDrawer from "@/components/ui/wishlistDrawer";
+import EditProfileDialog from "./EditProfileDialog";
 
 export default function Topbar() {
+  const [showEditProfile, setShowEditProfile] = useState(false);
+
   const { data, isLoading } = useUser();
   const user = data?.user;
   const isLoggedIn = data?.authenticated;
@@ -172,12 +175,13 @@ export default function Topbar() {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
-                    onClick={() => (window.location.href = "/edit-profile")}
+                    onClick={() => setShowEditProfile(true)} // 🔁 this opens the dialog
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-yellow-100"
                   >
                     <UserRoundCog size={16} />
                     Edit Profile
                   </DropdownMenuItem>
+
                   <DropdownMenuItem
                     onClick={() => setShowLogoutDialog(true)}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 cursor-pointer hover:bg-red-100"
@@ -187,6 +191,12 @@ export default function Topbar() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              {showEditProfile && (
+                <EditProfileDialog
+                  open={showEditProfile}
+                  onOpenChange={setShowEditProfile}
+                />
+              )}
             </>
           )}
         </div>
