@@ -10,6 +10,7 @@ import {
 import toast from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import EsewaPaymentForm from "./EsewaPaymentForm";
 
 export default function BookNowDialog({ vehicle }: { vehicle: any }) {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -186,13 +187,24 @@ export default function BookNowDialog({ vehicle }: { vehicle: any }) {
               </select>
             </div>
 
-            <button
-              onClick={handleBooking}
-              disabled={loading || !startDate || !endDate}
-              className="w-full py-2 text-sm font-medium text-white bg-green-600 rounded-md cursor-pointer hover:bg-green-700 disabled:opacity-50"
-            >
-              {loading ? "Booking..." : "Confirm Booking"}
-            </button>
+            {paymentMethod === "esewa" && isVerified ? (
+              <EsewaPaymentForm
+                amount={estimatedPrice}
+                pid={`booking_${vehicle.id}_${Date.now()}`}
+              />
+            ) : paymentMethod === "esewa" && !isVerified ? (
+              <div className="px-3 py-2 text-sm text-yellow-800 bg-yellow-100 border border-yellow-300 rounded">
+                You must upload and verify your license before paying.
+              </div>
+            ) : (
+              <button
+                onClick={handleBooking}
+                disabled={loading || !startDate || !endDate}
+                className="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                {loading ? "Booking..." : "Confirm Booking"}
+              </button>
+            )}
           </>
         )}
       </DialogContent>
