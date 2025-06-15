@@ -1,62 +1,11 @@
-"use client";
+// app/my-booking/confirmation/page.tsx (Server Component)
+import React, { Suspense } from "react";
+import ConfirmInner from "./ConfirmInner";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-
-export default function BookingConfirmation() {
-  const searchParams = useSearchParams();
-  const [status, setStatus] = useState<string | null>(null);
-
-  useEffect(() => {
-    const statusParam = searchParams?.get("status") ?? null;
-    setStatus(statusParam);
-  }, [searchParams]);
-
-  const isSuccess = status === "success";
-  const isFail = status === "fail";
-  const isError = !status || status === "error";
-
-  const title = isSuccess
-    ? "✅ Booking Confirmed!"
-    : isFail
-    ? "❌ Payment Failed"
-    : "⚠️ Something Went Wrong";
-
-  const message = isSuccess
-    ? "Your booking has been successfully processed."
-    : isFail
-    ? "There was an issue processing your payment. Please try again."
-    : "We couldn’t complete your booking due to an unexpected error.";
-
-  const bgColor = isSuccess
-    ? "bg-green-50 text-green-800"
-    : isFail
-    ? "bg-yellow-50 text-yellow-800"
-    : "bg-red-50 text-red-800";
-
-  const linkLabel = isSuccess
-    ? "View my bookings"
-    : isFail
-    ? "Retry Booking"
-    : "Back to Dashboard";
-
-  const linkHref = isSuccess ? "/my-booking" : isFail ? "/" : "/dashboard";
-
+export default function BookingConfirmationPage() {
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen p-6">
-      <div className={`max-w-lg w-full p-8 rounded-lg shadow ${bgColor}`}>
-        <h1 className="mb-4 text-2xl font-bold">{title}</h1>
-        <p className="mb-6">{message}</p>
-        <div className="flex justify-center">
-          <Link
-            href={linkHref}
-            className="px-6 py-3 font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
-          >
-            {linkLabel}
-          </Link>
-        </div>
-      </div>
-    </main>
+    <Suspense fallback={<p>Loading confirmation...</p>}>
+      <ConfirmInner />
+    </Suspense>
   );
 }
