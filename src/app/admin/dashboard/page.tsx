@@ -52,6 +52,13 @@ export default function AdminDashboard() {
       description: "View and verify License",
       href: "/admin/verify-license",
     },
+
+    {
+      label: "📊 Incoming Payments",
+      description:
+        "View all and verify payements and accodingly change the user's booking status",
+      href: "/admin/payments",
+    },
   ];
 
   return (

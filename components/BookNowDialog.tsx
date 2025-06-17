@@ -10,7 +10,6 @@ import {
 import toast from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import EsewaPaymentForm from "./EsewaPaymentForm";
 
 export default function BookNowDialog({ vehicle }: { vehicle: any }) {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -187,15 +186,43 @@ export default function BookNowDialog({ vehicle }: { vehicle: any }) {
               </select>
             </div>
 
-            {paymentMethod === "esewa" && isVerified ? (
-              <EsewaPaymentForm
-                amount={estimatedPrice}
-                pid={`booking_${vehicle.id}_${Date.now()}`}
-              />
-            ) : paymentMethod === "esewa" && !isVerified ? (
-              <div className="px-3 py-2 text-sm text-yellow-800 bg-yellow-100 border border-yellow-300 rounded">
-                You must upload and verify your license before paying.
-              </div>
+            {paymentMethod === "esewa" ? (
+              isVerified ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!startDate || !endDate || !durationValue) {
+                      toast.error(
+                        "Please select valid dates before proceeding."
+                      );
+                      return;
+                    }
+
+                    const pid = `booking_${vehicle.id}_${Date.now()}`;
+                    const successUrl = `${window.location.origin}/my-booking/confirmation?status=success`;
+                    const failUrl = `${window.location.origin}/my-booking/confirmation?status=fail`;
+                    const esewaUrl = `/mock-esewa?pid=${pid}&amt=${estimatedPrice}&vehicle_id=${
+                      vehicle.id
+                    }&start_date=${encodeURIComponent(
+                      startDate.toISOString()
+                    )}&end_date=${encodeURIComponent(
+                      endDate.toISOString()
+                    )}&duration_value=${durationValue}&su=${encodeURIComponent(
+                      successUrl
+                    )}&fu=${encodeURIComponent(failUrl)}`;
+
+                    window.location.href = esewaUrl;
+                  }}
+                  className="w-full py-2 text-white bg-green-600 rounded hover:bg-green-700"
+                >
+                  Pay with eSewa
+                </button>
+              ) : (
+                <div className="px-3 py-2 text-sm text-yellow-800 bg-yellow-100 border border-yellow-300 rounded">
+                  You must upload and verify your license before paying with
+                  eSewa.
+                </div>
+              )
             ) : (
               <button
                 onClick={handleBooking}
