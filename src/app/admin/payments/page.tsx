@@ -1,7 +1,10 @@
 "use client";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function AdminPaymentsPage() {
+  const router = useRouter();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -14,6 +17,14 @@ export default function AdminPaymentsPage() {
 
   return (
     <div className="p-6">
+      <button
+        onClick={() => router.back()}
+        className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-blue-600"
+      >
+        <ArrowLeft size={18} />
+        Back
+      </button>
+
       <h1 className="mb-4 text-2xl font-bold">Incoming Payments</h1>
 
       {loading ? (

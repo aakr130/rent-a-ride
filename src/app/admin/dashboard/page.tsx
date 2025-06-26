@@ -59,6 +59,12 @@ export default function AdminDashboard() {
         "View all and verify payements and accodingly change the user's booking status",
       href: "/admin/payments",
     },
+
+    {
+      label: "👥 Track Vehicle using GPS.",
+      description: "View and track booked vehciles",
+      href: "/admin/track",
+    },
   ];
 
   return (
