@@ -54,7 +54,10 @@ export default function Topbar() {
   return (
     <nav className="fixed top-0 left-0 z-50 w-full border-b shadow bg-white/80 backdrop-blur-md border-white/30">
       <div className="flex items-center justify-between max-w-screen-xl px-4 py-3 mx-auto md:px-8">
-        <Link href="" className="flex items-center space-x-2 whitespace-nowrap">
+        <Link
+          href=""
+          className="flex items-center space-x-2 pointer-events-none whitespace-nowrap"
+        >
           <div className="flex items-center justify-center w-10 h-10 rounded-full shadow-md bg-white/90">
             <Image
               src="/images/logo.png"
