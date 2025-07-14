@@ -97,7 +97,6 @@ export default function AdminsListPage() {
       </div>
       <h1 className="mb-6 text-3xl font-bold">Manage Admins</h1>
 
-      {/* Add Form */}
       <form
         onSubmit={handleAdd}
         className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-3"
@@ -137,7 +136,6 @@ export default function AdminsListPage() {
         </button>
       </form>
 
-      {/* Admin List */}
       {loading ? (
         <p>
           <Spinner />

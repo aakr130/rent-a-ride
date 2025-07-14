@@ -22,7 +22,6 @@ export default async function handler(
     if (!vehicle_id)
       return res.status(400).json({ error: "Missing vehicle ID" });
 
-    // Check if already exists
     const existing = await db.query(
       `SELECT * FROM wishlists WHERE user_id = $1 AND vehicle_id = $2`,
       [user_id, vehicle_id]
@@ -30,7 +29,7 @@ export default async function handler(
     if ((existing.rowCount ?? 0) > 0) {
       return res.status(200).json({ message: "Already in wishlist" });
     }
-    // Insert
+
     await db.query(
       `INSERT INTO wishlists (user_id, vehicle_id, created_at) VALUES ($1, $2, NOW())`,
       [user_id, vehicle_id]

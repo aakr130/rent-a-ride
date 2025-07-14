@@ -37,7 +37,7 @@ export default function AdminBookingsPage() {
     const res = await fetch(`/api/admins/bookings/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }), // 👈 simplified, no need to send booking_id separately
+      body: JSON.stringify({ status }),
     });
 
     if (!res.ok) return toast.error("Failed to update status");

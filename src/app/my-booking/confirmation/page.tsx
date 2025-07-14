@@ -1,4 +1,3 @@
-// app/my-booking/confirmation/page.tsx (Server Component)
 import React, { Suspense } from "react";
 import ConfirmInner from "./ConfirmInner";
 

@@ -45,7 +45,7 @@ export default function ScooterDetailPage() {
       } catch (err) {
         console.error("Error fetching scooter data", err);
       } finally {
-        setTimeout(() => setLoading(false), 300); // Ensures spinner displays at least briefly
+        setTimeout(() => setLoading(false), 300);
       }
     };
 
@@ -70,7 +70,6 @@ export default function ScooterDetailPage() {
 
   return (
     <main className="max-w-5xl px-4 py-10 mx-auto animate-fade-in">
-      {/* Back Button */}
       <button
         onClick={() => router.back()}
         className="fixed z-10 p-2 bg-white rounded-full shadow top-20 left-6 hover:bg-gray-100"
@@ -79,7 +78,6 @@ export default function ScooterDetailPage() {
         <ArrowLeft className="w-5 h-5 text-gray-700" />
       </button>
 
-      {/* Hero Section */}
       <div className="relative w-full mt-10 mb-4 overflow-hidden bg-white shadow rounded-xl">
         <Image
           src={scooter.images?.[0] || "/images/placeholder.jpg"}
@@ -94,7 +92,6 @@ export default function ScooterDetailPage() {
         </div>
       </div>
 
-      {/* Gallery */}
       <div className="flex gap-4 pb-2 mb-6 overflow-x-auto">
         {scooter.images?.map((img, idx) => (
           <Image
@@ -108,7 +105,6 @@ export default function ScooterDetailPage() {
         ))}
       </div>
 
-      {/* Info Card */}
       <div className="p-6 space-y-4 bg-white border shadow rounded-xl">
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-700 sm:grid-cols-3">
           <div>

@@ -26,7 +26,6 @@ export default async function handler(
       return res.status(403).json({ error: "Forbidden" });
     }
 
-    // 1. Fetch full user
     const userRes = await db.query(
       "SELECT name, email, password FROM users WHERE id = $1",
       [id]
@@ -34,14 +33,12 @@ export default async function handler(
     const user = userRes.rows[0];
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // 2. Insert into admins
     await db.query(
       `INSERT INTO admins (email, password, name, created_at)
        VALUES ($1, $2, $3, NOW())`,
       [user.email, user.password, user.name || "Admin"]
     );
 
-    // 3. Delete from users
     await db.query("DELETE FROM users WHERE id = $1", [id]);
 
     return res

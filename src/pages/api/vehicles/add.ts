@@ -13,7 +13,6 @@ export default async function handler(
   }
 
   try {
-    // 1. Verify access token
     const token = req.cookies.access_token;
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -52,7 +51,6 @@ export default async function handler(
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // 3. Insert into `vehicles` table (with array of images)
     await db.query(
       `INSERT INTO vehicles 
       (name, images, price, rating, seats, location, description, type, tags,brand,color, fuel_type, created_at)

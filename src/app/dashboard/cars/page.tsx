@@ -108,9 +108,6 @@ export default function CarDashboard() {
         </div>
       </section>
 
-      {/* 🚘 Top Picks */}
-      {/* 🚘 Top Picks */}
-
       {filteredCars.some((car) => car.tags.includes("top")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
@@ -137,7 +134,6 @@ export default function CarDashboard() {
         </section>
       )}
 
-      {/* 🚀 Just Added */}
       {filteredCars.some((car) => car.tags.includes("just-added")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
@@ -164,7 +160,6 @@ export default function CarDashboard() {
         </section>
       )}
 
-      {/* 🔋 Electric Picks */}
       {filteredCars.some((car) => car.tags.includes("electric")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">

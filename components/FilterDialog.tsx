@@ -100,7 +100,6 @@ export default function FilterDialog({ type }: FilterDialogProps) {
         </AlertDialogHeader>
 
         <div className="mt-4 space-y-6">
-          {/* Price Range */}
           <div>
             <h2 className="mb-2 font-medium">Price Range</h2>
             <Slider
@@ -117,7 +116,6 @@ export default function FilterDialog({ type }: FilterDialogProps) {
             </div>
           </div>
 
-          {/* Location */}
           <div>
             <h2 className="mb-2 font-medium">Location</h2>
             <div className="flex flex-wrap gap-2">
@@ -139,7 +137,6 @@ export default function FilterDialog({ type }: FilterDialogProps) {
             </div>
           </div>
 
-          {/* Colors */}
           <div>
             <h2 className="mb-2 font-medium">Colors</h2>
             <div className="flex gap-3">
@@ -163,7 +160,6 @@ export default function FilterDialog({ type }: FilterDialogProps) {
             </div>
           </div>
 
-          {/* Sitting Capacity */}
           <div>
             <h2 className="mb-2 font-medium">Sitting Capacity</h2>
             <div className="flex gap-2">
@@ -185,7 +181,6 @@ export default function FilterDialog({ type }: FilterDialogProps) {
             </div>
           </div>
 
-          {/* Fuel Type */}
           <div>
             <h2 className="mb-2 font-medium">Fuel Type</h2>
             <div className="flex flex-wrap gap-2">
@@ -205,7 +200,6 @@ export default function FilterDialog({ type }: FilterDialogProps) {
             </div>
           </div>
 
-          {/* Footer */}
           <div className="flex justify-between pt-4 border-t">
             <button
               className="text-sm text-gray-600 cursor-pointer"

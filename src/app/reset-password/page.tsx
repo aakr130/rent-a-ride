@@ -11,7 +11,7 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle password reset logic here
+
     console.log("Reset password for:", email);
   };
 

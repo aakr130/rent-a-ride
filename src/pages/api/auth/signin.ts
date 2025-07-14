@@ -23,7 +23,6 @@ export default async function handler(
   }
 
   try {
-    // Step 1: Check Admins first
     const adminResult = await db.query(
       "SELECT * FROM admins WHERE email = $1",
       [email]
@@ -59,7 +58,6 @@ export default async function handler(
       });
     }
 
-    // Step 2: Fallback to normal users
     const userResult = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);

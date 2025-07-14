@@ -84,7 +84,6 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   };
 
   const clearWishlist = () => {
-    // Optional: batch delete from backend here
     items.forEach((item) => removeFromWishlist(item.id));
     setItems([]);
   };

@@ -38,8 +38,10 @@ export default async function handler(
     );
 
     return res.status(201).json({ message: "Signup successful." });
-  } catch (err) {
-    console.error("🔥 SIGNUP ERROR:", err);
-    return res.status(500).json({ message: "Internal server error" });
+  } catch (err: any) {
+    console.error("🔥 SIGNUP ERROR:", err.message, err.stack);
+    return res
+      .status(500)
+      .json({ message: err.message || "Internal server error" });
   }
 }

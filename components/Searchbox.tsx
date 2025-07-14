@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react";
 import React, { useState } from "react";
-import FilterDialog from "./FilterDialog"; // adjust path if needed
+import FilterDialog from "./FilterDialog";
 
 interface SearchboxProps {
   type: "car" | "bike" | "scooter";

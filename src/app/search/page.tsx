@@ -30,12 +30,10 @@ export default function SearchPage() {
       try {
         setLoading(true);
 
-        // Always fetch ALL vehicles of the selected type
         const res = await fetch(`/api/vehicles/all?type=${selectedType}`);
         const allData: Car[] = await res.json();
         if (!Array.isArray(allData)) return;
 
-        // Extract brand filters from ALL vehicles of that type
         const brandMap = new Map<string, Brand>();
         allData.forEach((item) => {
           const raw = item.brand?.trim();
@@ -67,7 +65,6 @@ export default function SearchPage() {
 
         setBrands(brandList);
 
-        // Now fetch filtered data using full query string
         const filteredRes = await fetch(
           `/api/vehicles/all?${searchParams?.toString()}`
         );
@@ -106,7 +103,6 @@ export default function SearchPage() {
 
   return (
     <main className="flex flex-col min-h-screen pb-16 bg-white">
-      {/* Top Header */}
       <div className="flex items-center justify-between p-4 mt-6">
         <div className="flex items-center gap-4">
           <Link href="/home">
@@ -119,7 +115,6 @@ export default function SearchPage() {
         </Link>
       </div>
 
-      {/* Search Input */}
       <div className="flex items-center gap-2 px-6 pt-8 mb-8">
         <div className="relative w-full">
           <input
@@ -136,7 +131,6 @@ export default function SearchPage() {
         </div>
       </div>
 
-      {/* Brand Filters */}
       <div className="px-4 mb-6 overflow-x-auto no-scrollbar">
         <div className="flex gap-3 pb-2">
           {brands.map((brand) => (
@@ -149,7 +143,6 @@ export default function SearchPage() {
         </div>
       </div>
 
-      {/* Vehicle Listings */}
       <div className="px-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">
@@ -171,8 +164,6 @@ export default function SearchPage() {
           <p className="text-gray-500">No vehicles found for this brand.</p>
         )}
       </div>
-
-      {/* <BottomNavigation activeTab="search" /> */}
     </main>
   );
 }

@@ -22,8 +22,8 @@ export default function BrandFilter({ brand, type = "car" }: BrandProps) {
   const isAll = brand.name.toLowerCase() === "all";
 
   const href = isAll
-    ? `/dashboard/${type}s` // ✅ Redirects to dashboard
-    : `/search?type=${type}&brand=${brand.name.toLowerCase()}`; // ✅ Stays on search page with brand filter
+    ? `/dashboard/${type}s`
+    : `/search?type=${type}&brand=${brand.name.toLowerCase()}`;
 
   return (
     <Link

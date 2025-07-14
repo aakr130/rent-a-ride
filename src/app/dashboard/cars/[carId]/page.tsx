@@ -72,7 +72,7 @@ export default function CarDetailPage() {
 
   return (
     <main className="max-w-5xl px-4 py-10 mx-auto">
-      {/* Back Button */}
+     
       <button
         onClick={() => router.back()}
         className="fixed z-10 p-2 bg-white rounded-full shadow top-20 left-6 hover:bg-gray-100"
@@ -81,7 +81,7 @@ export default function CarDetailPage() {
         <ArrowLeft className="w-5 h-5 text-gray-700" />
       </button>
 
-      {/* Hero Section */}
+     
       <div className="relative w-full mt-10 mb-4 overflow-hidden bg-white shadow rounded-xl">
         <Image
           src={car.images?.[0] || "/images/placeholder.jpg"}
@@ -96,7 +96,7 @@ export default function CarDetailPage() {
         </div>
       </div>
 
-      {/* Gallery */}
+     
       <div className="flex gap-4 pb-2 mb-6 overflow-x-auto">
         {car.images?.map((img: string, idx: number) => (
           <Image
@@ -110,7 +110,7 @@ export default function CarDetailPage() {
         ))}
       </div>
 
-      {/* Info Card */}
+      
       <div className="p-6 space-y-4 bg-white border shadow rounded-xl">
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-700 sm:grid-cols-3">
           <div>

@@ -30,7 +30,6 @@ export default function VehicleCard({
       onClick={() => router.push(detailLink)}
     >
       <div className="overflow-hidden bg-white border shadow-sm rounded-xl hover:shadow-md">
-        {/* Image */}
         <div className="relative w-full h-40">
           <Image
             src={vehicle.images?.[0] || "/images/placeholder.jpg"}
@@ -49,7 +48,6 @@ export default function VehicleCard({
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-4 space-y-2">
           <div className="text-xs font-semibold text-blue-600 uppercase">
             {vehicle.brand}
@@ -75,7 +73,6 @@ export default function VehicleCard({
             </div>
           )}
 
-          {/* Detailed Labels */}
           <div className="flex flex-col gap-1 mt-2 text-xs text-gray-600">
             {vehicle.fuel_type && (
               <div className="flex items-center gap-2">
@@ -90,7 +87,6 @@ export default function VehicleCard({
             )}
           </div>
 
-          {/* Seats and Price */}
           <div className="flex items-center justify-between mt-3 text-xs text-gray-700">
             {vehicle.seats && (
               <div className="flex items-center gap-1">

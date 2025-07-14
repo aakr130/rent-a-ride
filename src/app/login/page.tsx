@@ -42,7 +42,6 @@ export default function LoginPage() {
         toast.success("Login successful");
         localStorage.setItem("user", JSON.stringify(result.user));
 
-        // ⤵️ Role-based redirection
         if (result.user.role === "admin") {
           window.location.href = "/admin/dashboard";
         } else {

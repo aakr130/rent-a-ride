@@ -213,7 +213,6 @@ export default function AddVehiclePage() {
           required
         />
 
-        {/* Tags checkbox layout */}
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-gray-600">Tags</label>
           {["just-added", "top", "electric"].map((tag) => (

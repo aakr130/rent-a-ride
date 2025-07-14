@@ -107,7 +107,6 @@ export default function BikeDashboard() {
         <Searchbox type="bike" value={searchQuery} onChange={setSearchQuery} />
       </div>
 
-      {/* 🏷️ Bike Brands */}
       <section className="mb-10">
         <h2 className="mb-4 text-lg font-semibold text-gray-700">
           Bike Brands
@@ -119,7 +118,6 @@ export default function BikeDashboard() {
         </div>
       </section>
 
-      {/* 🏍️ Top Rated */}
       {filteredBikes.some((b) => b.tags?.includes("top")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
@@ -150,7 +148,6 @@ export default function BikeDashboard() {
         </section>
       )}
 
-      {/* 🆕 Just Added */}
       {filteredBikes.some((b) => b.tags?.includes("just-added")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
@@ -181,7 +178,6 @@ export default function BikeDashboard() {
         </section>
       )}
 
-      {/* ⚡ Electric */}
       {filteredBikes.some((b) => b.tags?.includes("electric")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">

@@ -10,7 +10,7 @@ const getRouteSegment = (type: string) => {
   if (t.includes("car")) return "cars";
   if (t.includes("bike")) return "bikes";
   if (t.includes("scooter")) return "scooters";
-  return "cars"; // fallback
+  return "cars";
 };
 
 type Booking = {

@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
   AlertDialogAction,
   AlertDialogDescription,
-} from "@/components/ui/alert-dialog"; // adjust path as needed
+} from "@/components/ui/alert-dialog";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Spinner from "@/app/icons/spinner";

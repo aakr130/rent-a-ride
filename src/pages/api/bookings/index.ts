@@ -31,7 +31,6 @@ export default async function handler(
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Conflict check
     const conflictResult = await db.query(
       `SELECT 1 FROM bookings 
        WHERE vehicle_id = $1 
@@ -46,7 +45,6 @@ export default async function handler(
         .json({ error: "Vehicle already booked for selected dates" });
     }
 
-    // Insert booking
     const insertResult = await db.query(
       `INSERT INTO bookings 
    (user_id, vehicle_id, start_date, end_date,duration_value, payment_method, estimated_price)

@@ -14,7 +14,7 @@ export default async function handler(
     seats,
     price_min,
     price_max,
-    location, // 👈 added
+    location, 
   } = req.query;
 
   if (!type) {

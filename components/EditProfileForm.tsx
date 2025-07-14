@@ -141,7 +141,7 @@ export default function EditProfileForm({ onDone }: { onDone: () => void }) {
       if (response.ok) {
         toast.success("Profile updated successfully");
         await queryClient.invalidateQueries({ queryKey: ["user"] });
-        onDone?.(); // closes modal
+        onDone?.(); 
       } else {
         throw new Error(result.message || "Update failed");
       }

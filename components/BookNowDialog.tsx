@@ -24,7 +24,6 @@ export default function BookNowDialog({ vehicle }: { vehicle: any }) {
   >(null);
   const isVerified = licenseStatus === "approved";
 
-  // Fetch user's license status
   useEffect(() => {
     async function fetchUser() {
       try {
@@ -40,7 +39,6 @@ export default function BookNowDialog({ vehicle }: { vehicle: any }) {
     fetchUser();
   }, []);
 
-  // Auto-calculate duration + price
   useEffect(() => {
     if (!startDate || !endDate || !vehicle?.price) {
       setDurationValue(null);
@@ -121,7 +119,6 @@ export default function BookNowDialog({ vehicle }: { vehicle: any }) {
           </div>
         )}
 
-        {/* Form only shown if verified */}
         {isVerified && (
           <>
             <div className="space-y-1">

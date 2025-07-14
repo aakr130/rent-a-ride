@@ -33,7 +33,7 @@ export default function MapClient({
   const MapUpdater = () => {
     const map = useMap();
     useEffect(() => {
-      map.setView(vehicleCoords); // Keep center synced
+      map.setView(vehicleCoords);
     }, [vehicleCoords]);
     return null;
   };

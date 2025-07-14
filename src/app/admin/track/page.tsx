@@ -39,8 +39,8 @@ function getDeterministicOffset(
   base: [number, number],
   id: number
 ): [number, number] {
-  const latOffset = ((id % 10) - 5) * 0.01; // ±0.05 deg lat
-  const lonOffset = ((Math.floor(id / 10) % 10) - 5) * 0.01; // ±0.05 deg lon
+  const latOffset = ((id % 10) - 5) * 0.01;
+  const lonOffset = ((Math.floor(id / 10) % 10) - 5) * 0.01;
   return [base[0] + latOffset, base[1] + lonOffset];
 }
 
@@ -63,7 +63,7 @@ export default function TrackVehiclePage() {
   );
   const [pathCoords, setPathCoords] = useState<[number, number][]>([]);
 
-  const headingRef = useRef<number>(90); // ← Dynamic direction
+  const headingRef = useRef<number>(90);
 
   useEffect(() => {
     fetch("/api/admins/bookings", {
@@ -89,10 +89,9 @@ export default function TrackVehiclePage() {
 
     const interval = setInterval(() => {
       if (cancelled) return;
-      // Adjust heading slightly
+
       headingRef.current += (Math.random() - 0.5) * 2;
 
-      // Move in heading direction
       setVehicleCoords((coords) => {
         if (!coords) return coords;
         const [lat, lon] = coords;
@@ -151,11 +150,11 @@ export default function TrackVehiclePage() {
                 <Button
                   className="cursor-pointer"
                   onClick={() => {
-                    setTrackingBooking(null); // Force unmount
-                    setVehicleCoords(null); // Clear old coords
-                    setPathCoords([]); // Clear old path
+                    setTrackingBooking(null);
+                    setVehicleCoords(null);
+                    setPathCoords([]);
                     setTimeout(() => {
-                      setTrackingBooking(booking); // Set new booking after state cleared
+                      setTrackingBooking(booking);
                     }, 0);
                   }}
                 >
@@ -175,7 +174,7 @@ export default function TrackVehiclePage() {
           </h2>
 
           <MapClient
-            key={trackingBooking.vehicle_id} // fixed key for the session
+            key={trackingBooking.vehicle_id}
             vehicleCoords={vehicleCoords}
             pathCoords={pathCoords}
             vehicleId={trackingBooking.vehicle_id}

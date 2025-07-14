@@ -4,12 +4,11 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function DatePicker() {
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2022, 0)); // January 2022
-  const [selectedDate, setSelectedDate] = useState<number>(6); // 6th of January
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2022, 0));
+  const [selectedDate, setSelectedDate] = useState<number>(6);
 
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  // Generate days for the calendar
   const getDaysInMonth = (year: number, month: number): number => {
     return new Date(year, month + 1, 0).getDate();
   };
@@ -34,7 +33,6 @@ export default function DatePicker() {
 
   const days: CalendarDay[] = [];
 
-  // Previous month days
   for (let i = firstDayOfMonth - 1; i >= 0; i--) {
     days.push({
       day: prevMonthDays - i,
@@ -43,7 +41,6 @@ export default function DatePicker() {
     });
   }
 
-  // Current month days
   for (let i = 1; i <= daysInMonth; i++) {
     days.push({
       day: i,
@@ -51,8 +48,7 @@ export default function DatePicker() {
     });
   }
 
-  // Next month days
-  const remainingDays = 42 - days.length; // 6 rows of 7 days
+  const remainingDays = 42 - days.length;
   for (let i = 1; i <= remainingDays; i++) {
     days.push({
       day: i,
@@ -61,7 +57,6 @@ export default function DatePicker() {
     });
   }
 
-  // Format month name
   const monthNames = [
     "January",
     "February",
@@ -88,7 +83,7 @@ export default function DatePicker() {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg">
+    <div className="p-4 bg-white rounded-lg">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <button onClick={prevMonth} className="p-1">
@@ -105,7 +100,7 @@ export default function DatePicker() {
             <input
               type="text"
               value="10 : 30"
-              className="w-16 text-center bg-black text-white py-1 px-2 rounded-md"
+              className="w-16 px-2 py-1 text-center text-white bg-black rounded-md"
               readOnly
             />
             <span className="text-sm">am</span>
@@ -115,7 +110,7 @@ export default function DatePicker() {
             <input
               type="text"
               value="05 : 30"
-              className="w-16 text-center bg-white border py-1 px-2 rounded-md"
+              className="w-16 px-2 py-1 text-center bg-white border rounded-md"
               readOnly
             />
             <span className="text-sm">pm</span>
@@ -125,7 +120,7 @@ export default function DatePicker() {
 
       <div className="grid grid-cols-7 gap-2 mb-2">
         {daysOfWeek.map((day) => (
-          <div key={day} className="text-center text-sm font-medium">
+          <div key={day} className="text-sm font-medium text-center">
             {day}
           </div>
         ))}
@@ -153,7 +148,7 @@ export default function DatePicker() {
         <button className="px-6 py-2 border border-gray-300 rounded-full">
           Cancel
         </button>
-        <button className="px-6 py-2 bg-black text-white rounded-full">
+        <button className="px-6 py-2 text-white bg-black rounded-full">
           Done
         </button>
       </div>

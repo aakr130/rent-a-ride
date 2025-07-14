@@ -9,7 +9,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     if (user?.role !== "admin") {
-      router.replace("/login"); // Redirect non-admins
+      router.replace("/login");
     }
   }, [router]);
 

@@ -110,7 +110,6 @@ export default function ScooterDashboard() {
         />
       </div>
 
-      {/* Brands */}
       <section className="mb-10">
         <h2 className="mb-4 text-lg font-semibold text-gray-700">
           Scooter Brands
@@ -122,7 +121,6 @@ export default function ScooterDashboard() {
         </div>
       </section>
 
-      {/* 🛵 Top Rated Scooters */}
       {filteredScooters.some((s) => s.tags?.includes("top")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
@@ -153,7 +151,6 @@ export default function ScooterDashboard() {
         </section>
       )}
 
-      {/* 🆕 Just Added */}
       {filteredScooters.some((s) => s.tags?.includes("just-added")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">
@@ -183,7 +180,7 @@ export default function ScooterDashboard() {
           </div>
         </section>
       )}
-      {/* ⚡ Electric Scooters */}
+
       {filteredScooters.some((s) => s.tags?.includes("electric")) && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-2">

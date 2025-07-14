@@ -1,4 +1,4 @@
-// pages/api/wishlist/[id].ts
+
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/app/lib/db";

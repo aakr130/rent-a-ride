@@ -108,7 +108,6 @@ export default function Topbar() {
 
           {isLoggedIn && <WishlistDrawer />}
 
-          {/* Conditional: show when NOT logged in */}
           {isLoading ? (
             <div className="flex items-center justify-center w-10 h-10">
               <Spinner className="w-6 h-6 text-gray-600 transition-opacity animate-fade-in" />
@@ -175,7 +174,7 @@ export default function Topbar() {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
-                    onClick={() => setShowEditProfile(true)} // 🔁 this opens the dialog
+                    onClick={() => setShowEditProfile(true)}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-yellow-100"
                   >
                     <UserRoundCog size={16} />

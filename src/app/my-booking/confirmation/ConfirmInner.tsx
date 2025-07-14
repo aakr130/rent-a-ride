@@ -1,4 +1,3 @@
-// app/my-booking/confirmation/ConfirmInner.tsx (Client Component)
 "use client";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";

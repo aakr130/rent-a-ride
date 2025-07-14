@@ -10,13 +10,12 @@ export const config = {
   },
 };
 
-// Helper to parse multipart/form-data
 function parseForm(
   req: NextApiRequest
 ): Promise<{ fields: Fields; files: Files }> {
   const form = new IncomingForm({
     keepExtensions: true,
-    maxFileSize: 10 * 1024 * 1024, // 10 MB
+    maxFileSize: 10 * 1024 * 1024,
   });
 
   return new Promise((resolve, reject) => {

@@ -33,7 +33,6 @@ export default async function handler(
       return res.status(400).json({ message: "Name and email are required" });
     }
 
-    // Always update name, email, image
     await db.query(
       `UPDATE users 
        SET name = $1, email = $2, profile_image_url = $3,phone_number = $4, address = $5, license_card_url = $6, is_new_user = FALSE, updated_at = NOW()
@@ -49,7 +48,6 @@ export default async function handler(
       ]
     );
 
-    // Update password if provided (and not blank)
     if (password && password.trim() !== "") {
       await db.query(`UPDATE users SET password = $1 WHERE id = $2`, [
         password.trim(),
