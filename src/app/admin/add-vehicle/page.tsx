@@ -3,14 +3,14 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 
 export default function AddVehiclePage() {
   const router = useRouter();
 
   const [form, setForm] = useState({
     name: "",
-    images: [""],
+    images: [{ file: null as File | null, preview: "", url: "" }],
     price: "",
     rating: "",
     seats: "",
@@ -42,19 +42,47 @@ export default function AddVehiclePage() {
       setForm({ ...form, [name]: value });
     }
   };
-
-  const handleImageChange = (index: number, value: string) => {
+  const removeImage = (index: number) => {
     const updatedImages = [...form.images];
-    updatedImages[index] = value;
+    updatedImages[index] = { file: null, url: "", preview: "" };
+    setForm({ ...form, images: updatedImages });
+  };
+  const handleImageFileChange = (index: number, file: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      const updatedImages = [...form.images];
+      updatedImages[index] = {
+        file,
+        url: "",
+        preview: base64String,
+      };
+      setForm({ ...form, images: updatedImages });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleImageURLChange = (index: number, value: string) => {
+    const updatedImages = [...form.images];
+    updatedImages[index] = {
+      file: null,
+      url: value,
+      preview: value,
+    };
     setForm({ ...form, images: updatedImages });
   };
 
   const addImageField = () => {
-    setForm({ ...form, images: [...form.images, ""] });
+    setForm({
+      ...form,
+      images: [...form.images, { file: null, preview: "", url: "" }],
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const imagePayload = form.images.map((img) => img.preview); // base64 strings or URLs
 
     const res = await fetch("/api/vehicles/add", {
       method: "POST",
@@ -63,6 +91,7 @@ export default function AddVehiclePage() {
       },
       body: JSON.stringify({
         ...form,
+        images: imagePayload,
         price: +form.price,
         rating: +form.rating,
         seats: +form.seats,
@@ -74,7 +103,7 @@ export default function AddVehiclePage() {
       toast.success("Vehicle added successfully!");
       setForm({
         name: "",
-        images: [""],
+        images: [{ file: null, preview: "", url: "" }],
         price: "",
         rating: "",
         seats: "",
@@ -87,7 +116,7 @@ export default function AddVehiclePage() {
         fuel_type: "",
       });
     } else {
-      toast.error(data.error || " Failed to add vehicle.");
+      toast.error(data.error || "Failed to add vehicle.");
     }
   };
 
@@ -117,29 +146,79 @@ export default function AddVehiclePage() {
           onChange={handleChange}
           required
         />
-        <div className="flex flex-col gap-2 md:col-span-2">
-          <label className="text-sm font-medium text-gray-600">
-            Image URLs
+
+        <div className="flex flex-col gap-4 md:col-span-2">
+          <label className="text-sm font-medium text-gray-600 cursor-pointer">
+            Upload Images
           </label>
+
           {form.images.map((img, idx) => (
-            <input
+            <div
               key={idx}
-              type="text"
-              value={img}
-              onChange={(e) => handleImageChange(idx, e.target.value)}
-              placeholder={`Image URL ${idx + 1}`}
-              className="input"
-              required={idx === 0}
-            />
+              className="relative flex flex-col gap-3 p-4 border rounded-md bg-gray-50"
+            >
+              {!img.preview && (
+                <>
+                  <div className="flex items-center gap-4">
+                    <label
+                      htmlFor={`file-upload-${idx}`}
+                      className="px-4 py-2 text-sm font-medium text-white transition bg-blue-600 rounded cursor-pointer hover:bg-blue-700"
+                    >
+                      Choose Image {idx + 1}
+                    </label>
+                    <input
+                      id={`file-upload-${idx}`}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) =>
+                        e.target.files &&
+                        handleImageFileChange(idx, e.target.files[0])
+                      }
+                      required={idx === 0}
+                    />
+                  </div>
+
+                  <input
+                    type="text"
+                    value={img.url}
+                    onChange={(e) => handleImageURLChange(idx, e.target.value)}
+                    placeholder={`Paste Image URL ${idx + 1}`}
+                    className="text-sm input"
+                  />
+                </>
+              )}
+
+              {/* Image preview with removable cross */}
+              {img.preview && (
+                <div className="relative mt-2 w-fit">
+                  <img
+                    src={img.preview}
+                    alt={`Preview ${idx + 1}`}
+                    className="object-cover w-auto h-24 border rounded-md"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(idx)}
+                    className="absolute p-1 transition bg-white border border-gray-300 rounded-full -top-2 -right-2 hover:bg-red-100"
+                    aria-label="Remove image"
+                  >
+                    <X size={16} className="text-red-500" />
+                  </button>
+                </div>
+              )}
+            </div>
           ))}
+
           <button
             type="button"
             onClick={addImageField}
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-blue-600 cursor-pointer hover:underline"
           >
             + Add another image
           </button>
         </div>
+
         <input
           name="price"
           placeholder="Price"
@@ -247,7 +326,7 @@ export default function AddVehiclePage() {
 
         <button
           type="submit"
-          className="w-full px-4 py-2 font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 md:col-span-2"
+          className="w-full px-4 py-2 font-semibold text-white bg-blue-600 rounded cursor-pointer curosor-pointer hover:bg-blue-700 md:col-span-2"
         >
           Add Vehicle
         </button>

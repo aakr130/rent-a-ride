@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 
 export default function EditVehiclePage() {
   const { id } = useParams() as { id: string };
@@ -164,34 +164,95 @@ export default function EditVehiclePage() {
 
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">
-            Image URLs
+            Images
           </label>
-          {vehicle.images?.map((img: string, idx: number) => (
-            <input
-              key={idx}
-              type="text"
-              value={img}
-              onChange={(e) => {
-                const updated = [...vehicle.images];
-                updated[idx] = e.target.value;
-                setVehicle({ ...vehicle, images: updated });
-              }}
-              className="input"
-              placeholder={`Image ${idx + 1}`}
-            />
-          ))}
-          <button
-            type="button"
-            onClick={() =>
-              setVehicle({
-                ...vehicle,
-                images: [...(vehicle.images || []), ""],
-              })
-            }
-            className="mt-2 text-sm text-blue-600 hover:underline"
-          >
-            + Add another image
-          </button>
+
+          <div className="flex flex-col gap-4">
+            {vehicle.images?.map((img: string, idx: number) => (
+              <div
+                key={idx}
+                className="relative flex flex-col gap-3 p-4 border rounded-md bg-gray-50"
+              >
+                {!img.startsWith("data:") && !img.startsWith("http") && (
+                  <div className="flex items-center gap-4">
+                    <label
+                      htmlFor={`edit-file-upload-${idx}`}
+                      className="px-4 py-2 text-sm font-medium text-white transition bg-blue-600 rounded cursor-pointer hover:bg-blue-700"
+                    >
+                      Choose Image {idx + 1}
+                    </label>
+                    <input
+                      id={`edit-file-upload-${idx}`}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            const updated = [...vehicle.images];
+                            updated[idx] = reader.result as string;
+                            setVehicle({ ...vehicle, images: updated });
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+
+                {!img.startsWith("data:") && (
+                  <input
+                    type="text"
+                    value={img}
+                    onChange={(e) => {
+                      const updated = [...vehicle.images];
+                      updated[idx] = e.target.value;
+                      setVehicle({ ...vehicle, images: updated });
+                    }}
+                    placeholder={`Paste Image URL ${idx + 1}`}
+                    className="text-sm input"
+                  />
+                )}
+
+                {img && (
+                  <div className="relative mt-2 w-fit">
+                    <img
+                      src={img}
+                      alt={`Preview ${idx + 1}`}
+                      className="object-cover w-auto h-24 border rounded-md"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = [...vehicle.images];
+                        updated[idx] = "";
+                        setVehicle({ ...vehicle, images: updated });
+                      }}
+                      className="absolute p-1 transition bg-white border border-gray-300 rounded-full -top-2 -right-2 hover:bg-red-100"
+                      aria-label="Remove image"
+                    >
+                      <X size={16} className="text-red-500" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={() =>
+                setVehicle({
+                  ...vehicle,
+                  images: [...(vehicle.images || []), ""],
+                })
+              }
+              className="text-sm text-blue-600 hover:underline"
+            >
+              + Add another image
+            </button>
+          </div>
         </div>
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700 ">

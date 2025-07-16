@@ -82,3 +82,10 @@ export default async function handler(
       .json({ message: "Server error while adding vehicle." });
   }
 }
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "20mb",
+    },
+  },
+};

@@ -99,7 +99,7 @@ export default function BookNowDialog({ vehicle }: { vehicle: any }) {
     <Dialog>
       <DialogTrigger
         disabled={!isVerified}
-        className={`w-full py-2 mt-4 font-semibold text-white transition rounded ${
+        className={`w-full py-2 mt-4 font-semibold cursor-pointer text-white transition rounded ${
           isVerified
             ? "bg-blue-600 hover:bg-blue-700"
             : "bg-gray-400 cursor-not-allowed"
