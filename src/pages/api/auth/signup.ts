@@ -8,6 +8,7 @@ export default async function handler(
 ) {
   await cors(req, res);
   console.log("✅ SIGNUP ROUTE HIT");
+  console.log("🔍 DATABASE_URL in signup:", process.env.DATABASE_URL ? "EXISTS" : "MISSING");
 
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
@@ -24,6 +25,7 @@ export default async function handler(
       return res.status(400).json({ message: "All fields are required." });
     }
 
+    console.log("🔍 Attempting database query...");
     const existing = await db.query("SELECT id FROM users WHERE email = $1", [
       email,
     ]);
@@ -32,14 +34,18 @@ export default async function handler(
       return res.status(409).json({ message: "Email already registered." });
     }
 
+    console.log("🔍 Inserting new user...");
     await db.query(
       "INSERT INTO users (name, email, password,is_new_user) VALUES ($1, $2, $3,true)",
       [fullName.trim(), email.trim(), password.trim()]
     );
 
+    console.log("✅ User created successfully");
     return res.status(201).json({ message: "Signup successful." });
   } catch (err: any) {
     console.error("🔥 SIGNUP ERROR:", err.message, err.stack);
+    console.error("🔥 Error code:", err.code);
+    console.error("🔥 Error detail:", err.detail);
     return res
       .status(500)
       .json({ message: err.message || "Internal server error" });
