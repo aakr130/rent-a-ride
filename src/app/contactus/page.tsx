@@ -1,22 +1,40 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function ContactPage() {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    toast.success("Message sent successfully! We'll get back to you soon.");
+    setIsSubmitted(true);
+    
+    setTimeout(() => {
+      setIsSubmitted(false);
+      (e.target as HTMLFormElement).reset();
+    }, 3000);
+  };
+
   return (
     <main className="min-h-screen px-6 py-20 text-gray-800 bg-gradient-to-b from-white via-slate-300 to-white sm:px-12 lg:px-24">
+      <Toaster position="top-right" />
+      
       <section className="mb-16 text-center">
         <h1 className="mb-4 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 drop-shadow-lg">
-          Let’s Talk
+          Let's Talk
         </h1>
         <p className="max-w-2xl mx-auto text-lg font-medium text-gray-600">
-          Have a question? Need assistance? Or just want to say hi? We’re here
+          Have a question? Need assistance? Or just want to say hi? We're here
           to help make your ride smoother and smarter.
         </p>
       </section>
 
       <section className="grid items-start grid-cols-1 gap-12 md:grid-cols-2">
-        <form className="relative p-10 space-y-6 transition bg-white border border-gray-100 shadow-xl rounded-2xl hover:shadow-2xl">
+        <form onSubmit={handleSubmit} className="relative p-10 space-y-6 transition bg-white border border-gray-100 shadow-xl rounded-2xl hover:shadow-2xl">
           <div>
             <label
               htmlFor="name"
@@ -27,6 +45,7 @@ export default function ContactPage() {
             <input
               type="text"
               id="name"
+              name="name"
               required
               placeholder="John Doe"
               className="w-full px-4 py-3 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -43,6 +62,7 @@ export default function ContactPage() {
             <input
               type="email"
               id="email"
+              name="email"
               required
               placeholder="you@example.com"
               className="w-full px-4 py-3 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -58,6 +78,7 @@ export default function ContactPage() {
             </label>
             <textarea
               id="message"
+              name="message"
               required
               rows={5}
               placeholder="Your message..."
@@ -67,9 +88,14 @@ export default function ContactPage() {
 
           <button
             type="submit"
-            className="w-full py-3 font-semibold text-white transition rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-pink-500 hover:opacity-90 hover:shadow-lg"
+            disabled={isSubmitted}
+            className={`w-full py-3 font-semibold text-white transition rounded-lg shadow-md ${
+              isSubmitted 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-indigo-500 to-pink-500 hover:opacity-90 hover:shadow-lg'
+            }`}
           >
-            Send Message
+            {isSubmitted ? 'Message Sent!' : 'Send Message'}
           </button>
         </form>
 

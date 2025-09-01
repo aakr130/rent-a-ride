@@ -1,7 +1,9 @@
 "use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function AboutUsPage() {
+  const router = useRouter();
   return (
     <main className="relative z-0 min-h-screen px-6 py-10 pt-20 text-gray-900 bg-gradient-to-b from-white via-slate-300 to-white sm:px-12 lg:px-24">
       <section className="mb-16 text-center">
@@ -131,7 +133,7 @@ export default function AboutUsPage() {
           From two wheels to four — we don’t just rent rides. We fuel freedom.
         </p>
 
-        <button className="px-6 py-3 mt-6 font-semibold text-white transition-all duration-300 rounded-full shadow-lg cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 hover:scale-105 active:scale-95">
+        <button onClick={() => router.push("/dashboard")} className="px-6 py-3 mt-6 font-semibold text-white transition-all duration-300 rounded-full shadow-lg cursor-pointer bg-gradient-to-r from-indigo-500 to-pink-500 hover:scale-105 active:scale-95">
           Explore Our Vehicles
         </button>
       </section>

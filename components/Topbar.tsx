@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, Heart, Menu, ShoppingBag, UserRoundCog, X } from "lucide-react";
+import { Bell, Heart, Menu, ShoppingBag, UserRoundCog, X, FileText, CheckCircle, XCircle, Clock } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import "./topbar.css";
@@ -182,6 +182,34 @@ export default function Topbar() {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
+                    onClick={() => (window.location.href = "/license-verification")}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-yellow-100"
+                  >
+                    <FileText size={16} />
+                    <div className="flex items-center gap-2">
+                      <span>License Status:</span>
+                      <div className="flex items-center gap-1">
+                        {user?.license_status === "approved" ? (
+                          <>
+                            <CheckCircle size={14} className="text-green-500" />
+                            <span className="text-green-600 font-medium">Approved</span>
+                          </>
+                        ) : user?.license_status === "rejected" ? (
+                          <>
+                            <XCircle size={14} className="text-red-500" />
+                            <span className="text-red-600 font-medium">Rejected</span>
+                          </>
+                        ) : (
+                          <>
+                            <Clock size={14} className="text-yellow-500" />
+                            <span className="text-yellow-600 font-medium">Pending</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
                     onClick={() => setShowLogoutDialog(true)}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 cursor-pointer hover:bg-red-100"
                   >
@@ -194,6 +222,7 @@ export default function Topbar() {
                 <EditProfileDialog
                   open={showEditProfile}
                   onOpenChange={setShowEditProfile}
+                  allowClose={true}
                 />
               )}
             </>

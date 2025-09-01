@@ -22,7 +22,7 @@ export default async function handler(
     duration_value,
   } = req.body;
 
-  console.log("[PAYLOAD]", req.body);
+
 
   if (
     !pid ||

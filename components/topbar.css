@@ -10,7 +10,7 @@
   left: 0;
   width: 0%;
   height: 2px;
-  background-color: #f87171; /* Tailwind red-400 */
+  background-color: #f87171;
   transition: width 0.4s ease;
 }
 

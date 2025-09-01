@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, XCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
@@ -74,27 +74,40 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="mt-2 space-y-5">
           <input {...register("email")} placeholder="Email" className="input" />
           {errors.email && (
-            <p className="text-sm text-red-500">{errors.email.message}</p>
+            <p className="text-sm text-red-500 font-medium flex items-center gap-1">
+              <XCircle size={14} />
+              {errors.email.message}
+            </p>
           )}
 
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              {...register("password")}
-              placeholder="Password"
-              className="pr-10 input"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute text-gray-500 transform -translate-y-1/2 top-1/2 right-3"
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
+          <div className="space-y-2">
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                {...register("password")}
+                placeholder="Password"
+                className="pr-10 input"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute text-gray-500 transform -translate-y-1/2 top-1/2 right-3"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+            
+            <p className="text-xs text-gray-500">
+              Password must be at least 6 characters long
+            </p>
+            
+            {errors.password && (
+              <p className="text-sm text-red-500 font-medium flex items-center gap-1">
+                <XCircle size={14} />
+                {errors.password.message}
+              </p>
+            )}
           </div>
-          {errors.password && (
-            <p className="text-sm text-red-500">{errors.password.message}</p>
-          )}
 
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 text-black">
@@ -131,7 +144,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-4 text-sm text-center text-gray-600">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link
             href="/signup"
             className="font-medium text-black hover:underline"

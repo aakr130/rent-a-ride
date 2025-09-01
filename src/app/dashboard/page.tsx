@@ -102,7 +102,11 @@ export default function DashboardMain() {
         </Link>
       </div>
       {showDialog && (
-        <EditProfileDialog open={showDialog} onOpenChange={setShowDialog} />
+        <EditProfileDialog 
+          open={showDialog} 
+          onOpenChange={setShowDialog} 
+          allowClose={false}
+        />
       )}
     </main>
   );

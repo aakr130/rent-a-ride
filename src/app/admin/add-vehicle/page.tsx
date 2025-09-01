@@ -189,7 +189,6 @@ export default function AddVehiclePage() {
                 </>
               )}
 
-              {/* Image preview with removable cross */}
               {img.preview && (
                 <div className="relative mt-2 w-fit">
                   <img

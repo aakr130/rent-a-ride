@@ -215,19 +215,30 @@ export default function BookNowDialog({ vehicle }: { vehicle: any }) {
                   Pay with eSewa
                 </button>
               ) : (
-                <div className="px-3 py-2 text-sm text-yellow-800 bg-yellow-100 border border-yellow-300 rounded">
-                  You must upload and verify your license before paying with
-                  eSewa.
-                </div>
+                <button
+                  onClick={() => (window.location.href = "/license-verification")}
+                  className="w-full py-2 text-white bg-yellow-600 rounded hover:bg-yellow-700"
+                >
+                  Upload & Verify License to Book
+                </button>
               )
             ) : (
-              <button
-                onClick={handleBooking}
-                disabled={loading || !startDate || !endDate}
-                className="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
-              >
-                {loading ? "Booking..." : "Confirm Booking"}
-              </button>
+              isVerified ? (
+                <button
+                  onClick={handleBooking}
+                  disabled={loading || !startDate || !endDate}
+                  className="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {loading ? "Booking..." : "Confirm Booking"}
+                </button>
+              ) : (
+                <button
+                  onClick={() => (window.location.href = "/license-verification")}
+                  className="w-full py-2 text-white bg-yellow-600 rounded hover:bg-yellow-700"
+                >
+                  Upload & Verify License to Book
+                </button>
+              )
             )}
           </>
         )}
