@@ -1,21 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import Spinner from "@/app/icons/spinner";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-  AlertDialogAction,
-  AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Spinner from "@/app/icons/spinner";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type User = {
   id: number;
@@ -58,18 +58,32 @@ export default function ManageUsersPage() {
     try {
       const res = await fetch(`/api/users/${id}/${actionType}`, {
         method: actionType === "promote" ? "POST" : "DELETE",
+        headers:{
+          'Content-Type':'application/json',
+        },
+        body:actionType==="promote"?JSON.stringify({userId:id,action:"promote"}):undefined
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Action failed");
+     if(!res.ok){
+      throw new Error(data.message||data.error||"Action Failed")
+     }
 
-      toast.success(
-        actionType === "promote"
-          ? `${email} promoted to admin`
-          : `${email} deleted`
-      );
+     if(actionType==="promote"){
+      toast.success(data.message||`${email} promoted to admin succesfully`)
 
-      setUsers((prev) => prev.filter((u) => u.id !== id));
+     }else{ toast.success(data.message||`${email} delted  succesfully`)
+
+     }
+
+     const refreshRes = await fetch("/api/users");
+      if (refreshRes.ok) {
+        const refreshData = await refreshRes.json();
+        setUsers(refreshData);
+      } else {
+      
+        setUsers((prev) => prev.filter((u) => u.id !== id));
+      }
     } catch (err: any) {
       toast.error(err.message || "Failed to perform action");
     } finally {

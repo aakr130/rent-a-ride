@@ -84,3 +84,11 @@ export default async function handler(
   res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
   res.status(405).json({ error: `Method ${req.method} not allowed` });
 }
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "20mb",
+    },
+  },
+};
